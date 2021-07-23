@@ -1,0 +1,365 @@
+html,
+body {
+  width: 100%;
+  height: 100%;
+  min-height: 900px;
+}
+
+body {
+  background: url('../img/login-bg-pc.jpg');
+  /* ie9以下不支持 */
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.login {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  -webkit-user-select: none;
+  /* Safari */
+  -ms-user-select: none;
+  /* IE 10+ and Edge */
+  user-select: none;
+}
+
+.login h1 {
+  padding: 1em 0;
+  font-size: 80px;
+  text-align: center;
+  color: #00ffff;
+}
+
+.login-form {
+  position: relative;
+  width: 30%;
+  background-color: #2b2b36;
+  border-radius: 15px;
+  -webkit-border-radius: 15px;
+  -moz-border-radius: 15px;
+  -o-border-radius: 15px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.login-form .close {
+  position: absolute;
+  left: 20px;
+  top: 20px;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  background: url('../img/close.png');
+}
+
+.login-form .head-info {
+  width: 100%;
+  height: 50px;
+  padding: 5px 0;
+  background: #23232e;
+  border-top-left-radius: 10px;
+  -webkit-border-top-left-radius: 10px;
+  -moz-border-top-left-radius: 10px;
+  -o-border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  -webkit-border-top-right-radius: 10px;
+  -moz-border-top-right-radius: 10px;
+  -o-border-top-right-radius: 10p;
+}
+
+.head-info div {
+  float: right;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  margin: 16px 10px 0px 0px;
+}
+
+.circle-yellow {
+  background: #f1c85f;
+}
+
+.circle-red {
+  background: #ea569a;
+}
+
+.circle-purple {
+  background: #6756ea;
+}
+
+.avatar {
+  width: 100%;
+  text-align: center;
+}
+
+.avatar img {
+  margin-top: 2em;
+  max-width: 80px;
+  border: 0;
+}
+
+input[type='text'] {
+  width: 70%;
+  margin-top: 2em;
+  padding: 1em 2em 1em 3em;
+  color: #fff;
+  outline: none;
+  border: none;
+  background: url('../img/adm.png') no-repeat 10px 15px;
+  font-size: 18px;
+  font-weight: 100;
+  border-bottom: 1px solid #484856;
+}
+
+input[type='password'] {
+  width: 70%;
+  padding: 1em 2em 1em 3em;
+  color: #fff;
+  outline: none;
+  border: none;
+  background: url('../img/password.png') no-repeat 10px 15px;
+  font-size: 18px;
+  font-weight: 100;
+  border-bottom: 1px solid #484856;
+  margin-bottom: 1em;
+}
+
+input::-webkit-input-placeholder {
+  color: #fff;
+}
+
+input:-moz-placeholder {
+  color: #fff;
+}
+
+input::-moz-placeholder {
+  color: #fff;
+}
+
+input:-ms-input-placeholder {
+  color: #fff;
+}
+
+/*阻止chrome自动填充功能的默认样式(黄色)覆盖 但是会将背景图片小图标也覆盖为背景色*/
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-transition-delay: 111111s;
+  -webkit-transition: color 11111s ease-out, background-color 111111s ease-out;
+}
+
+/*滑动验证码部分*/
+.no-captcha {
+  position: relative;
+  width: 70%;
+  height: 40px;
+  background-color: #e8e8e8;
+  margin: 0 auto;
+  padding: 0 2em 0 3em;
+}
+
+.no-captcha-bg {
+  position: absolute;
+  width: 100%;
+  height: 40px;
+  left: 0;
+  background-color: rgb(39, 233, 21);
+}
+
+.no-captcha-text {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  text-align: center;
+  line-height: 40px;
+  color: #fff;
+}
+
+.no-captcha-btn {
+  position: absolute;
+  width: 40px;
+  height: 38px;
+  left: 0;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  color: #666;
+  line-height: 38px;
+  text-align: center;
+  cursor: move;
+}
+
+.no-captcha-btn img {
+  width: 18px;
+  margin-top: 11px;
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+
+.foot-info {
+  margin-top: 1em;
+}
+
+input[type="submit"] {
+  font-size: 30px;
+  color: #fff;
+  outline: none;
+  border: none;
+  background: #3ea751;
+  width: 100%;
+  padding: 18px 0;
+  border-bottom-left-radius: 15px;
+  -webkit-border-bottom-left-radius: 15px;
+  -moz-border-bottom-left-radius: 15px;
+  -o-border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+  -webkit-border-bottom-right-radius: 15px;
+  -moz-border-bottom-right-radius: 15px;
+  -o-border-bottom-right-radius: 15px;
+  cursor: pointer;
+}
+
+
+input[type="submit"] {
+  transition: 0.1s all;
+  -webkit-transition: 0.1s all;
+  -moz-transition: 0.1s all;
+  -o-transition: 0.1s all;
+}
+
+input[type="submit"]:hover {
+  background: #ff2775;
+  border-bottom-left-radius: 15px;
+  -webkit-border-bottom-left-radius: 15px;
+  -moz-border-bottom-left-radius: 15px;
+  -o-border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+  -webkit-border-bottom-right-radius: 15px;
+  -moz-border-bottom-right-radius: 15px;
+  -o-border-bottom-right-radius: 15px;
+  transition: 1s all;
+  -webkit-transition: 1s all;
+  -moz-transition: 1s all;
+  -o-transition: 1s all;
+}
+
+
+/*响应式部分*/
+
+@media (max-width:1440px) {
+  body {
+    background-size: auto 900px;
+  }
+
+  .login-form {
+    width: 40%;
+  }
+}
+
+@media (max-width:1366px) {
+  .login-form {
+    width: 45%;
+  }
+}
+
+@media (max-width:1280px) {
+  .login-form {
+    width: 50%;
+  }
+}
+
+@media (max-width:1024px) {
+  .login-form {
+    width: 37%;
+  }
+
+  .login h1 {
+    padding-top: 0.5em;
+  }
+}
+
+@media (max-width:768px) {
+  .login .login-form {
+    width: 90%;
+    margin: 12% auto 0 auto;
+  }
+}
+
+
+@media (max-width:640px) {
+  body {
+    min-height: 800px;
+    background: url('../img/login-bg-m.jpg');
+    background-size: auto 800px;
+  }
+
+  .login-form {
+    width: 60%;
+    margin: 20% auto 0 auto;
+  }
+
+  .login h1 {
+    padding-top: 1em;
+    font-size: 2em;
+  }
+}
+
+@media (max-width:480px) {
+  .login-form {
+    width: 80%;
+  }
+}
+
+@media screen and (max-width:320px) {
+  .login h1 {
+    padding-top: 0.5em;
+    font-size: 1.5em;
+  }
+
+  .login .login-form {
+    width: 90%;
+    margin: 10% auto 0 auto;
+  }
+
+  .login-form input[type="text"] {
+    width: 62%;
+    padding: 1.2em 2em .5em 2.5em;
+    font-size: 17px;
+    margin-top: .5em;
+  }
+
+  .login-form input[type="password"] {
+    width: 62%;
+    padding: 1.2em 2em .5em 2.5em;
+    font-size: 17px;
+    margin-top: .5em;
+    margin-bottom: 1em;
+  }
+
+  .no-captcha {
+    width: 62%;
+  }
+
+  .login-form .avatar img {
+    margin: 1.1em 0 0;
+  }
+
+  .login-form .head-info {
+    height: 35px;
+  }
+
+  .login-form .head-info div {
+    margin: 8px 10px 0px 0px;
+  }
+
+  .login-form .close {
+    left: 16px;
+    top: 13px;
+  }
+
+  .login-form input[type="submit"] {
+    font-size: 28px;
+    padding: 10px 0;
+  }
+}
