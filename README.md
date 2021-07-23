@@ -69,6 +69,7 @@ HeyPass一款基于 bip39 标准和thinkphp5.1框架的个人隐私管理系统�
 - [clipboard.js](https://github.com/zenorocha/clipboard.js/)
 - [cryptojs](https://code.google.com/p/crypto-js/)
 - [jsencrypt](https://github.com/travist/jsencrypt/)
+- [hitokoto一言 api](https://developer.hitokoto.cn/sentence/)
 
 ### 其他
 
