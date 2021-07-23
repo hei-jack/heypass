@@ -1,16 +1,17 @@
 <?php
 //备忘模块控制器
 namespace app\admin\controller;
+
 use app\common\controller\AdminBase;
 use app\admin\logic\User as UserLogic;
 use app\common\model\Category;
 use app\common\model\Memo as MemoModel;
 use app\common\model\MemoData;
 
-class Memo extends AdminBase {
+class Memo extends AdminBase{
 
 	//备忘列表
-	public function index() {
+	public function index(){
 		if ($this->request->isPost()) {
 			$referer = $this->request->server('HTTP_REFERER');
 			$host = $this->request->host(true);
@@ -18,12 +19,12 @@ class Memo extends AdminBase {
 			if (!UserLogic::checkLogin($referer, $host, $url)) return json($this->res);
 			$key = config('app.rsa_private_key');
 			$data = [
-			        '__token__'  => UserLogic::rsaDecrypt($key, $this->request->header('Access-token')),  
-			        'host' => UserLogic::rsaDecrypt($key, $this->request->header('Access-token2')), 
-			        'limit' => input('post.limit'),  
-			        'page' => input('post.page'),  
-			        'id' => input('post.cid'), 
-			      ];
+				'__token__'  => UserLogic::rsaDecrypt($key, $this->request->header('Access-token')),
+				'host' => UserLogic::rsaDecrypt($key, $this->request->header('Access-token2')),
+				'limit' => input('post.limit'),
+				'page' => input('post.page'),
+				'id' => input('post.cid'),
+			];
 			if (strtolower($data['host']) !== $host) return json($this->res);
 			$result = $this->validate($data, '\app\common\validate\Paging.ilpt');
 			if ($result !== true) {
@@ -39,8 +40,8 @@ class Memo extends AdminBase {
 				return json($this->res);
 			}
 			$model = new MemoModel();
-			$uid = session('uid','','admin');
-			$this->res['total'] = $model->getsubTotal($uid,$data['id']);
+			$uid = session('uid', '', 'admin');
+			$this->res['total'] = $model->getsubTotal($uid, $data['id']);
 			if ($this->res['total'] === 0) {
 				$this->res['status'] = 200;
 				$this->res['mess'] = '获取失败,当前分类下数据为空~';
@@ -51,41 +52,41 @@ class Memo extends AdminBase {
 				$this->res['mess'] = '请求页码超出范围~';
 				return json($this->res);
 			}
-			$this->res['data'] = $model->getMemoList($uid,$data['id'],$data['page'], $data['limit']);
+			$this->res['data'] = $model->getMemoList($uid, $data['id'], $data['page'], $data['limit']);
 			$this->res['status'] = 200;
 			$this->res['mess'] = '获取成功';
 			return json($this->res);
 		} else {
 			$model = new Category();
 			$cat = $model->field('id,c_zh as zh')->all();
-			$this->assign('cat',$cat);
-			$send_key = hash('sha256',config('app.send_key'));
-			$key = substr($send_key,32,32);
-			$iv = substr($send_key,8,16);
-			$this->assign('token2',$key);
-			$this->assign('sign2',$iv);
+			$this->assign('cat', $cat);
+			$send_key = hash('sha256', config('app.send_key'));
+			$key = substr($send_key, 32, 32);
+			$iv = substr($send_key, 8, 16);
+			$this->assign('token2', $key);
+			$this->assign('sign2', $iv);
 			return $this->fetch('/memo_list');
 		}
 	}
 
 	//新增备忘
-	public function add() {
+	public function add(){
 		if ($this->request->isPost()) {
 			$referer = $this->request->server('HTTP_REFERER');
 			$host = $this->request->host(true);
 			$url = url('admin/Memo/add');
 			if (!UserLogic::checkLogin($referer, $host, $url)) return json($this->res);
 			$key = config('app.rsa_private_key');
-			$send_key = hash('sha256',config('app.send_key'));
-			$start = substr($send_key,32,32);
-			$iv = substr($send_key,8,16);
+			$send_key = hash('sha256', config('app.send_key'));
+			$start = substr($send_key, 32, 32);
+			$iv = substr($send_key, 8, 16);
 			$data = [
-			        '__token__'  => UserLogic::rsaDecrypt($key, $this->request->header('Access-token')),  
-			        'host' => UserLogic::rsaDecrypt($key, $this->request->header('Access-token2')), 
-			        'cid' => input('post.cid'),  
-			        'title' => UserLogic::rsaDecrypt($key, input('post.title')),  
-			        'content' => openssl_decrypt(input('post.content'), 'aes-256-cbc', $start, 0, $iv),  
-			      ];
+				'__token__'  => UserLogic::rsaDecrypt($key, $this->request->header('Access-token')),
+				'host' => UserLogic::rsaDecrypt($key, $this->request->header('Access-token2')),
+				'cid' => input('post.cid'),
+				'title' => UserLogic::rsaDecrypt($key, input('post.title')),
+				'content' => openssl_decrypt(input('post.content'), 'aes-256-cbc', $start, 0, $iv),
+			];
 			if (strtolower($data['host']) !== $host) return json($this->res);
 			$result = $this->validate($data, '\app\common\validate\Misc.add');
 			if ($result !== true) {
@@ -106,19 +107,19 @@ class Memo extends AdminBase {
 		} else {
 			$model = new Category();
 			$cat = $model->field('id,c_zh as zh')->all();
-			$send_key = hash('sha256',config('app.send_key'));
-			$key = substr($send_key,32,32);
-			$iv = substr($send_key,8,16);
-			$this->assign('token2',$key);
-			$this->assign('sign2',$iv);
-			$this->assign('empty','<option value="-2" selected="selected">-- 请先添加密码分类 --</option>');
-			$this->assign('cat',$cat);
+			$send_key = hash('sha256', config('app.send_key'));
+			$key = substr($send_key, 32, 32);
+			$iv = substr($send_key, 8, 16);
+			$this->assign('token2', $key);
+			$this->assign('sign2', $iv);
+			$this->assign('empty', '<option value="-2" selected="selected">-- 请先添加密码分类 --</option>');
+			$this->assign('cat', $cat);
 			return $this->fetch('/add_memo');
 		}
 	}
 
 	//删除备忘接口
-	public function del() {
+	public function del(){
 		if ($this->request->isPost()) {
 			$referer = $this->request->server('HTTP_REFERER');
 			$host = $this->request->host(true);
@@ -126,10 +127,10 @@ class Memo extends AdminBase {
 			if (!UserLogic::checkLogin($referer, $host, $url)) return json($this->res);
 			$key = config('app.rsa_private_key');
 			$data = [
-			        '__token__'  => UserLogic::rsaDecrypt($key, $this->request->header('Access-token')),  
-			        'host' => UserLogic::rsaDecrypt($key, $this->request->header('Access-token2')), 
-			        'id' => UserLogic::rsaDecrypt($key, input('post.id')),  
-			      ];
+				'__token__'  => UserLogic::rsaDecrypt($key, $this->request->header('Access-token')),
+				'host' => UserLogic::rsaDecrypt($key, $this->request->header('Access-token2')),
+				'id' => UserLogic::rsaDecrypt($key, input('post.id')),
+			];
 			if (strtolower($data['host']) !== $host) return json($this->res);
 			$result = $this->validate($data, '\app\common\validate\Paging.idt');
 			if ($result !== true) {
@@ -152,23 +153,23 @@ class Memo extends AdminBase {
 	}
 
 	//编辑备忘
-	public function edit() {
-		if($this->request->isPost()) {
+	public function edit(){
+		if ($this->request->isPost()) {
 			$referer = $this->request->server('HTTP_REFERER');
 			$host = $this->request->host(true);
 			$url = url('admin/Memo/edit');
 			if (!UserLogic::checkLogin($referer, $host, $url)) return json($this->res);
 			$key = config('app.rsa_private_key');
-			$send_key = hash('sha256',config('app.send_key'));
-			$start = substr($send_key,32,32);
-			$iv = substr($send_key,8,16);
+			$send_key = hash('sha256', config('app.send_key'));
+			$start = substr($send_key, 32, 32);
+			$iv = substr($send_key, 8, 16);
 			$data = [
-			      '__token__'  => UserLogic::rsaDecrypt($key, $this->request->header('Access-token')),  
-			      'host' => UserLogic::rsaDecrypt($key, $this->request->header('Access-token2')), 
-			      'id' => input('post.id'),  
-			      'cid' => input('post.cid'),  
-			      'title' => UserLogic::rsaDecrypt($key, input('post.title')),  
-			      'content' => openssl_decrypt(input('post.content'), 'aes-256-cbc', $start, 0, $iv),  //内容太长 前端rsa加密出错 故更换为aes-256-cbc加密
+				'__token__'  => UserLogic::rsaDecrypt($key, $this->request->header('Access-token')),
+				'host' => UserLogic::rsaDecrypt($key, $this->request->header('Access-token2')),
+				'id' => input('post.id'),
+				'cid' => input('post.cid'),
+				'title' => UserLogic::rsaDecrypt($key, input('post.title')),
+				'content' => openssl_decrypt(input('post.content'), 'aes-256-cbc', $start, 0, $iv),  //内容太长 前端rsa加密出错 故更换为aes-256-cbc加密
 			];
 			if (strtolower($data['host']) !== $host) return json($this->res);
 			$result = $this->validate($data, '\app\common\validate\Misc.memo_edit');
@@ -189,8 +190,8 @@ class Memo extends AdminBase {
 			return json($this->res);
 		} else {
 			$data = [
-			      'id' => input('get.id','','strip_tags,addslashes'),
-			    ];
+				'id' => input('get.id', '', 'strip_tags,addslashes'),
+			];
 			$result = $this->validate($data, '\app\common\validate\Paging.id');
 			if ($result !== true) return '非法请求，请检查后重试~';
 			$data['id'] = (int)$data['id'];
@@ -203,28 +204,28 @@ class Memo extends AdminBase {
 			$cat_model = new Category();
 			$cat = $cat_model->field('id,c_zh as zh')->all();
 			//将密钥和向量分配到页面
-			$send_key = hash('sha256',config('app.send_key'));
+			$send_key = hash('sha256', config('app.send_key'));
 			//返回64位
-			$key = substr($send_key,32,32);
+			$key = substr($send_key, 32, 32);
 			//截取最后32位作为key
-			$iv = substr($send_key,8,16);
+			$iv = substr($send_key, 8, 16);
 			//截取前面剩余32位中间16位作为$iv
-			$this->assign('token2',$key);
-			$this->assign('sign2',$iv);
-			$this->assign('empty','<option value="-2" selected="selected">-- 请先添加密码分类 --</option>');
-			$this->assign('cat',$cat);
-			$this->assign('memo',$memo);
-			$this->assign('content',$content);
+			$this->assign('token2', $key);
+			$this->assign('sign2', $iv);
+			$this->assign('empty', '<option value="-2" selected="selected">-- 请先添加密码分类 --</option>');
+			$this->assign('cat', $cat);
+			$this->assign('memo', $memo);
+			$this->assign('content', $content);
 			return $this->fetch('/edit_memo');
 		}
 	}
-  
+
 	//查看备忘页面
-	public function memo() {
+	public function memo(){
 		if ($this->request->isGet()) {
 			$data = [
-			        'id' => input('get.id', '', 'strip_tags,addslashes'),
-			      ];
+				'id' => input('get.id', '', 'strip_tags,addslashes'),
+			];
 			$result = $this->validate($data, '\app\common\validate\Paging.id');
 			if ($result !== true) return '非法请求，请检查后重试~';
 			$data['id'] = (int)$data['id'];

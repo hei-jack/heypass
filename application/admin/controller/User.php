@@ -5,10 +5,10 @@ use app\common\controller\AdminBase;
 use app\admin\logic\User as UserLogic;
 use app\common\model\User as UserModel;
 
-class User extends AdminBase {
+class User extends AdminBase{
 
 	//渲染用户列表页
-	public function index() {
+	public function index(){
 		if ($this->request->isPost()) {
 			$referer = $this->request->server('HTTP_REFERER');
 			$host = $this->request->host(true);
@@ -16,11 +16,11 @@ class User extends AdminBase {
 			if (!UserLogic::checkLogin($referer, $host, $url)) return json($this->res);
 			$key = config('app.rsa_private_key');
 			$data = [
-			        '__token__'  => UserLogic::rsaDecrypt($key, $this->request->header('Access-token')),  
-			        'host' => UserLogic::rsaDecrypt($key, $this->request->header('Access-token2')), 
-			        'limit' => input('post.limit'),  
-			        'page' => input('post.page'),  
-			      ];
+				'__token__'  => UserLogic::rsaDecrypt($key, $this->request->header('Access-token')),
+				'host' => UserLogic::rsaDecrypt($key, $this->request->header('Access-token2')),
+				'limit' => input('post.limit'),
+				'page' => input('post.page'),
+			];
 			if (strtolower($data['host']) !== $host) return json($this->res);
 			$result = $this->validate($data, '\app\common\validate\Paging.default');
 			if ($result !== true) {
@@ -56,7 +56,7 @@ class User extends AdminBase {
 	}
 
 	//新增亲友
-	public function add() {
+	public function add(){
 		if ($this->request->isPost()) {
 			$referer = $this->request->server('HTTP_REFERER');
 			$host = $this->request->host(true);
@@ -64,12 +64,12 @@ class User extends AdminBase {
 			if (!UserLogic::checkLogin($referer, $host, $url)) return json($this->res);
 			$key = config('app.rsa_private_key');
 			$data = [
-			        '__token__'  => UserLogic::rsaDecrypt($key, $this->request->header('Access-token')),  
-			        'host' => UserLogic::rsaDecrypt($key, $this->request->header('Access-token2')), 
-			        'username' => UserLogic::rsaDecrypt($key, input('post.username')),  
-			        'password' => UserLogic::rsaDecrypt($key, input('post.password')),  
-			        'nickname' => UserLogic::rsaDecrypt($key, input('post.nickname')),  
-			      ];
+				'__token__'  => UserLogic::rsaDecrypt($key, $this->request->header('Access-token')),
+				'host' => UserLogic::rsaDecrypt($key, $this->request->header('Access-token2')),
+				'username' => UserLogic::rsaDecrypt($key, input('post.username')),
+				'password' => UserLogic::rsaDecrypt($key, input('post.password')),
+				'nickname' => UserLogic::rsaDecrypt($key, input('post.nickname')),
+			];
 			if (strtolower($data['host']) !== $host) return json($this->res);
 			$result = $this->validate($data, '\app\common\validate\User.add');
 			if ($result !== true) {
@@ -93,7 +93,7 @@ class User extends AdminBase {
 	}
 
 	//删除用户接口
-	public function del() {
+	public function del(){
 		if ($this->request->isPost()) {
 			$referer = $this->request->server('HTTP_REFERER');
 			$host = $this->request->host(true);
@@ -101,10 +101,10 @@ class User extends AdminBase {
 			if (!UserLogic::checkLogin($referer, $host, $url)) return json($this->res);
 			$key = config('app.rsa_private_key');
 			$data = [
-			        '__token__'  => UserLogic::rsaDecrypt($key, $this->request->header('Access-token')),  
-			        'host' => UserLogic::rsaDecrypt($key, $this->request->header('Access-token2')), 
-			        'id' => UserLogic::rsaDecrypt($key, input('post.id')),  
-			      ];
+				'__token__'  => UserLogic::rsaDecrypt($key, $this->request->header('Access-token')),
+				'host' => UserLogic::rsaDecrypt($key, $this->request->header('Access-token2')),
+				'id' => UserLogic::rsaDecrypt($key, input('post.id')),
+			];
 			if (strtolower($data['host']) !== $host) return json($this->res);
 			$result = $this->validate($data, '\app\common\validate\Paging.idt');
 			if ($result !== true) {
@@ -113,7 +113,7 @@ class User extends AdminBase {
 				return json($this->res);
 			}
 			$model = new UserModel();
-			if (!$model->delUser((int)$data['id'],$this->request->ip())) {
+			if (!$model->delUser((int)$data['id'], $this->request->ip())) {
 				$this->res['mess'] = '删除失败';
 				$this->res['data'] = '请稍后再试！';
 				return json($this->res);
@@ -125,23 +125,23 @@ class User extends AdminBase {
 		}
 		return json($this->res);
 	}
-  
+
 	//编辑用户
-	public function edit() {
-		if($this->request->isPost()) {
+	public function edit(){
+		if ($this->request->isPost()) {
 			$referer = $this->request->server('HTTP_REFERER');
 			$host = $this->request->host(true);
 			$url = url('admin/User/edit');
 			if (!UserLogic::checkLogin($referer, $host, $url)) return json($this->res);
 			$key = config('app.rsa_private_key');
 			$data = [
-			        '__token__'  => UserLogic::rsaDecrypt($key, $this->request->header('Access-token')),  
-			        'host' => UserLogic::rsaDecrypt($key, $this->request->header('Access-token2')), 
-			        'id' => input('post.id','','strip_tags,addslashes'), 
-			        'username' => UserLogic::rsaDecrypt($key, input('post.username')),  
-			        'nickname' => UserLogic::rsaDecrypt($key, input('post.nickname')),  
-			        'state' => input('post.state','','strip_tags,addslashes'),  
-			      ];
+				'__token__'  => UserLogic::rsaDecrypt($key, $this->request->header('Access-token')),
+				'host' => UserLogic::rsaDecrypt($key, $this->request->header('Access-token2')),
+				'id' => input('post.id', '', 'strip_tags,addslashes'),
+				'username' => UserLogic::rsaDecrypt($key, input('post.username')),
+				'nickname' => UserLogic::rsaDecrypt($key, input('post.nickname')),
+				'state' => input('post.state', '', 'strip_tags,addslashes'),
+			];
 			if (strtolower($data['host']) !== $host) return json($this->res);
 			$result = $this->validate($data, '\app\common\validate\User.edit');
 			if ($result !== true) {
@@ -150,7 +150,7 @@ class User extends AdminBase {
 				return json($this->res);
 			}
 			$model = new UserModel();
-			if (!$model->edit($data,$this->request->ip())) {
+			if (!$model->edit($data, $this->request->ip())) {
 				$this->res['mess'] = '保存失败';
 				$this->res['data'] = '请稍候再试';
 				return json($this->res);
@@ -161,14 +161,14 @@ class User extends AdminBase {
 			return json($this->res);
 		} else {
 			$data = [
-			        'id' => input('get.id','','strip_tags,addslashes'),
-			      ];
+				'id' => input('get.id', '', 'strip_tags,addslashes'),
+			];
 			$result = $this->validate($data, '\app\common\validate\Paging.id');
 			if ($result !== true) return '非法请求，请检查后重试~';
 			$model = new UserModel();
 			$user = $model->getUserInfo((int)$data['id']);
-			if($user === null) return '非法请求，请检查后重试~';
-			$this->assign('user',$user);
+			if ($user === null) return '非法请求，请检查后重试~';
+			$this->assign('user', $user);
 			return $this->fetch('/edit_user');
 		}
 	}
