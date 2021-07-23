@@ -105,6 +105,11 @@ class Password extends Model{
     }
   }
 
+  //获取单个分类下的密码总数
+  public function getCatTotal($cid){
+    return $this->where('cid',$cid)->count();
+  }
+
   //查询密码信息
   public function getPassInfo($id){
     return $this->field('cid,p_pass as pass,p_name as name,p_title as title,p_url as url,p_other as other')->where('id',$id)->find();

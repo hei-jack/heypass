@@ -171,4 +171,33 @@ class Category extends AdminBase {
 			return $this->fetch('/edit_cat');
 		}
 	}
+
+	//获取单个分类下密码总数
+  public function getSubtotal(){
+    if ($this->request->isPost()) {
+      $referer = $this->request->server('HTTP_REFERER');
+      $host = $this->request->host(true);
+      $url = url('admin/Category/index');
+      if (!UserLogic::checkLogin($referer, $host, $url)) return json($this->res);
+      $key = config('app.rsa_private_key');
+      $data = [
+        '__token__'  => UserLogic::rsaDecrypt($key, $this->request->header('Access-token')),  //token令牌
+        'host' => UserLogic::rsaDecrypt($key, $this->request->header('Access-token2')), //域名 rsa解密
+        'id' => input('post.id', '', 'strip_tags,addslashes'),
+      ];
+      if (strtolower($data['host']) !== $host) return json($this->res);
+      $result = $this->validate($data, '\app\common\validate\Paging.idt'); //调用验证器进行验证 id场景
+      if ($result !== true) {
+        $this->res['mess'] = '非法请求';
+        $this->res['data'] = '非法请求数据';
+        return json($this->res);
+      }
+      $model = new \app\common\model\Password();
+      $this->res['status'] = 200;
+      $this->res['mess'] = '获取成功';
+      $this->res['data'] = $model->getCatTotal((int)$data['id']);
+      return json($this->res);
+    }
+    return json($this->res);
+  }
 }

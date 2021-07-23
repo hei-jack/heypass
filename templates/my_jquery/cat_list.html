@@ -105,17 +105,43 @@
           },
           //绑定事件
           events: {
-            //第四个参数为当前表格对象
+            //编辑按钮
             'click .edit_btn': function (event, value, row, table) {
               //新建一个标签页
               //打开新标签页
               window.parent.$.home.createTab('{:url("admin/Category/edit")}?id=' + row.id, '编辑分类');
             },
-            //第四个参数为当前表格对象
+            //获取单个分类下密码记录数量
             'click .total_btn': function (event, value, row, table) {
               //ajax请求获取对应分类下密码数量
-              console.log(row['id']);
+              $.ajax({
+                url: '{:url("admin/Category/getSubtotal")}',
+                type: 'post',
+                dataType: 'json',
+                data: {
+                  'id': row.id,
+                },
+                headers: {
+                  'Access-token': dataHelper($('[name="token"]').value),
+                  'Access-token2': dataHelper(window.location.host), //伪装 发送域名
+                },
+                success: function (res, code, xmlhttp) {
+                  //刷新token
+                  refreshToken();
+                  if (res.status === 200) {
+                    refreshToken();
+                    showTopMessage(' ' + row.zh + ' 分类下密码记录共有' + res.data + '条', true, 1500);
+                    return;
+                  }
+                  showTopMessage(res.mess + ',' + res.data, false, 1500);
+                },
+                error: function (obj, status) {
+                  refreshToken();
+                  showTopMessage('请检查网络情况或稍后再试', false, 1500);
+                }
+              });
             },
+            //删除按钮
             'click .del_btn': function (event, value, row, table) {
               //ajax请求删除用户 成功则刷新表格 失败告知用户
               //提示用户
