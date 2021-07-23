@@ -1,27 +1,28 @@
 <?php
 //日记模块控制器
 namespace app\admin\controller;
+
 use app\common\controller\AdminBase;
 use app\admin\logic\User as UserLogic;
 use app\common\model\Diary as DiaryModel;
 use app\common\model\DiaryData;
 
-class Diary extends AdminBase {
+class Diary extends AdminBase{
 
 	//日记列表
-	public function index() {
-		if($this->request->isPost()) {
+	public function index(){
+		if ($this->request->isPost()) {
 			$referer = $this->request->server('HTTP_REFERER');
 			$host = $this->request->host(true);
 			$url = url('admin/Diary/index');
 			if (!UserLogic::checkLogin($referer, $host, $url)) return json($this->res);
 			$key = config('app.rsa_private_key');
 			$data = [
-			        '__token__'  => UserLogic::rsaDecrypt($key, $this->request->header('Access-token')),  
-			        'host' => UserLogic::rsaDecrypt($key, $this->request->header('Access-token2')), 
-			        'year' => input('post.year','','addslashes'),  
-			        'month' => input('post.month','','addslashes'),  
-			      ];
+				'__token__'  => UserLogic::rsaDecrypt($key, $this->request->header('Access-token')),
+				'host' => UserLogic::rsaDecrypt($key, $this->request->header('Access-token2')),
+				'year' => input('post.year', '', 'addslashes'),
+				'month' => input('post.month', '', 'addslashes'),
+			];
 			if (strtolower($data['host']) !== $host) return json($this->res);
 			$result = $this->validate($data, '\app\common\validate\Misc.diary_list');
 			if ($result !== true) {
@@ -32,7 +33,7 @@ class Diary extends AdminBase {
 			$data['year'] = (int)$data['year'];
 			$data['month'] = (int)$data['month'];
 			$model = new DiaryModel();
-			$this->res['total'] = $model->getSubtotal($data['year'],$data['month']);
+			$this->res['total'] = $model->getSubtotal($data['year'], $data['month']);
 			if ($this->res['total'] === 0) {
 				$this->res['status'] = 200;
 				$this->res['mess'] = '获取成功';
@@ -48,7 +49,7 @@ class Diary extends AdminBase {
 	}
 
 	//新增标记
-	public function addTag() {
+	public function addTag(){
 		if ($this->request->isPost()) {
 			$referer = $this->request->server('HTTP_REFERER');
 			$host = $this->request->host(true);
@@ -56,11 +57,11 @@ class Diary extends AdminBase {
 			if (!UserLogic::checkLogin($referer, $host, $url)) return json($this->res);
 			$key = config('app.rsa_private_key');
 			$data = [
-			        '__token__'  => UserLogic::rsaDecrypt($key, $this->request->header('Access-token')),  
-			        'host' => UserLogic::rsaDecrypt($key, $this->request->header('Access-token2')), 
-			        'id' => input('post.id','','addslashes'),  
-			        'date' => input('post.date','addslashes'), 
-			      ];
+				'__token__'  => UserLogic::rsaDecrypt($key, $this->request->header('Access-token')),
+				'host' => UserLogic::rsaDecrypt($key, $this->request->header('Access-token2')),
+				'id' => input('post.id', '', 'addslashes'),
+				'date' => input('post.date', 'addslashes'),
+			];
 			if (strtolower($data['host']) !== $host) return json($this->res);
 			$result = $this->validate($data, '\app\common\validate\Misc.tag');
 			if ($result !== true) {
@@ -83,7 +84,7 @@ class Diary extends AdminBase {
 	}
 
 	//取消标记
-	public function delTag() {
+	public function delTag(){
 		if ($this->request->isPost()) {
 			$referer = $this->request->server('HTTP_REFERER');
 			$host = $this->request->host(true);
@@ -91,11 +92,11 @@ class Diary extends AdminBase {
 			if (!UserLogic::checkLogin($referer, $host, $url)) return json($this->res);
 			$key = config('app.rsa_private_key');
 			$data = [
-			        '__token__'  => UserLogic::rsaDecrypt($key, $this->request->header('Access-token')),  
-			        'host' => UserLogic::rsaDecrypt($key, $this->request->header('Access-token2')), 
-			        'id' => input('post.id','','addslashes'),  
-			        'date' => input('post.date','addslashes'), 
-			      ];
+				'__token__'  => UserLogic::rsaDecrypt($key, $this->request->header('Access-token')),
+				'host' => UserLogic::rsaDecrypt($key, $this->request->header('Access-token2')),
+				'id' => input('post.id', '', 'addslashes'),
+				'date' => input('post.date', 'addslashes'),
+			];
 			if (strtolower($data['host']) !== $host) return json($this->res);
 			$result = $this->validate($data, '\app\common\validate\Misc.tag');
 			if ($result !== true) {
@@ -119,22 +120,22 @@ class Diary extends AdminBase {
 	}
 
 	//添加日记
-	public function add() {
+	public function add(){
 		if ($this->request->isPost()) {
 			$referer = $this->request->server('HTTP_REFERER');
 			$host = $this->request->host(true);
 			$url = url('admin/Diary/add');
 			if (!UserLogic::checkLogin($referer, $host, $url)) return json($this->res);
 			$key = config('app.rsa_private_key');
-			$send_key = hash('sha256',config('app.send_key'));
-			$start = substr($send_key,32,32);
-			$iv = substr($send_key,8,16);
+			$send_key = hash('sha256', config('app.send_key'));
+			$start = substr($send_key, 32, 32);
+			$iv = substr($send_key, 8, 16);
 			$data = [
-			        '__token__'  => UserLogic::rsaDecrypt($key, $this->request->header('Access-token')),  
-			        'host' => UserLogic::rsaDecrypt($key, $this->request->header('Access-token2')), 
-			        'date' => UserLogic::rsaDecrypt($key, input('post.date')),  
-			        'content' => openssl_decrypt(input('post.content'), 'aes-256-cbc', $start, 0, $iv),  
-			      ];
+				'__token__'  => UserLogic::rsaDecrypt($key, $this->request->header('Access-token')),
+				'host' => UserLogic::rsaDecrypt($key, $this->request->header('Access-token2')),
+				'date' => UserLogic::rsaDecrypt($key, input('post.date')),
+				'content' => openssl_decrypt(input('post.content'), 'aes-256-cbc', $start, 0, $iv),
+			];
 			if (strtolower($data['host']) !== $host) return json($this->res);
 			$result = $this->validate($data, '\app\common\validate\Misc.diary_add');
 			if ($result !== true) {
@@ -153,21 +154,21 @@ class Diary extends AdminBase {
 			$this->res['data'] = '请到日记列表页面查看!';
 			return json($this->res);
 		} else {
-			$send_key = hash('sha256',config('app.send_key'));
-			$key = substr($send_key,32,32);
-			$iv = substr($send_key,8,16);
-			$this->assign('token2',$key);
-			$this->assign('sign2',$iv);
+			$send_key = hash('sha256', config('app.send_key'));
+			$key = substr($send_key, 32, 32);
+			$iv = substr($send_key, 8, 16);
+			$this->assign('token2', $key);
+			$this->assign('sign2', $iv);
 			return $this->fetch('/add_diary');
 		}
 	}
 
 	//查看日记
-	public function diary() {
+	public function diary(){
 		if ($this->request->isGet()) {
 			$data = [
-			        'id' => input('get.id', '', 'strip_tags,addslashes'),
-			      ];
+				'id' => input('get.id', '', 'strip_tags,addslashes'),
+			];
 			$result = $this->validate($data, '\app\common\validate\Paging.id');
 			if ($result !== true) return '非法请求，请检查后重试~';
 			$data['id'] = (int)$data['id'];
@@ -190,23 +191,23 @@ class Diary extends AdminBase {
 	}
 
 	//编辑日记
-	public function edit() {
-		if($this->request->isPost()) {
+	public function edit(){
+		if ($this->request->isPost()) {
 			$referer = $this->request->server('HTTP_REFERER');
 			$host = $this->request->host(true);
 			$url = url('admin/Diary/edit');
 			if (!UserLogic::checkLogin($referer, $host, $url)) return json($this->res);
 			$key = config('app.rsa_private_key');
-			$send_key = hash('sha256',config('app.send_key'));
-			$start = substr($send_key,32,32);
-			$iv = substr($send_key,8,16);
+			$send_key = hash('sha256', config('app.send_key'));
+			$start = substr($send_key, 32, 32);
+			$iv = substr($send_key, 8, 16);
 			$data = [
-			        '__token__'  => UserLogic::rsaDecrypt($key, $this->request->header('Access-token')),  
-			        'host' => UserLogic::rsaDecrypt($key, $this->request->header('Access-token2')), 
-			        'id' => input('post.id','','addslashes'),  
-			        'date' => UserLogic::rsaDecrypt($key,input('post.date')),  
-			        'content' => openssl_decrypt(input('post.content'), 'aes-256-cbc', $start, 0, $iv),  
-			      ];
+				'__token__'  => UserLogic::rsaDecrypt($key, $this->request->header('Access-token')),
+				'host' => UserLogic::rsaDecrypt($key, $this->request->header('Access-token2')),
+				'id' => input('post.id', '', 'addslashes'),
+				'date' => UserLogic::rsaDecrypt($key, input('post.date')),
+				'content' => openssl_decrypt(input('post.content'), 'aes-256-cbc', $start, 0, $iv),
+			];
 			if (strtolower($data['host']) !== $host) return json($this->res);
 			$result = $this->validate($data, '\app\common\validate\Misc.diary_edit');
 			if ($result !== true) {
@@ -226,8 +227,8 @@ class Diary extends AdminBase {
 			return json($this->res);
 		} else {
 			$data = [
-			        'id' => input('get.id','','strip_tags,addslashes'),
-			      ];
+				'id' => input('get.id', '', 'strip_tags,addslashes'),
+			];
 			$result = $this->validate($data, '\app\common\validate\Paging.id');
 			if ($result !== true) return '非法请求，请检查后重试~';
 			$data['id'] = (int)$data['id'];
@@ -237,19 +238,19 @@ class Diary extends AdminBase {
 			$data_model = new DiaryData();
 			$content = $data_model->getContent($data['id']);
 			if ($content === null) return '系统错误，请联系管理员！';
-			$send_key = hash('sha256',config('app.send_key'));
-			$key = substr($send_key,32,32);
-			$iv = substr($send_key,8,16);
-			$this->assign('token2',$key);
-			$this->assign('sign2',$iv);
-			$this->assign('date',$date);
-			$this->assign('content',$content);
+			$send_key = hash('sha256', config('app.send_key'));
+			$key = substr($send_key, 32, 32);
+			$iv = substr($send_key, 8, 16);
+			$this->assign('token2', $key);
+			$this->assign('sign2', $iv);
+			$this->assign('date', $date);
+			$this->assign('content', $content);
 			return $this->fetch('/edit_diary');
 		}
 	}
 
 	//删除日记
-	public function del() {
+	public function del(){
 		if ($this->request->isPost()) {
 			$referer = $this->request->server('HTTP_REFERER');
 			$host = $this->request->host(true);
@@ -257,10 +258,10 @@ class Diary extends AdminBase {
 			if (!UserLogic::checkLogin($referer, $host, $url)) return json($this->res);
 			$key = config('app.rsa_private_key');
 			$data = [
-			        '__token__'  => UserLogic::rsaDecrypt($key, $this->request->header('Access-token')),  
-			        'host' => UserLogic::rsaDecrypt($key, $this->request->header('Access-token2')), 
-			        'id' => input('post.id','','addslashes'),
-			      ];
+				'__token__'  => UserLogic::rsaDecrypt($key, $this->request->header('Access-token')),
+				'host' => UserLogic::rsaDecrypt($key, $this->request->header('Access-token2')),
+				'id' => input('post.id', '', 'addslashes'),
+			];
 			if (strtolower($data['host']) !== $host) return json($this->res);
 			$result = $this->validate($data, '\app\common\validate\Paging.idt');
 			if ($result !== true) {

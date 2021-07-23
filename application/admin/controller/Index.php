@@ -1,32 +1,33 @@
 <?php
 //后台主页控制器
 namespace app\admin\controller;
+
 use app\common\controller\AdminBase;
 use app\admin\logic\User as UserLogic;
 use app\common\model\UserLog;
 use think\Db;
 
-class Index extends AdminBase {
+class Index extends AdminBase{
 
 	//伪主页方法
-	public function index() {
+	public function index(){
 		//渲染伪主页页面
 		return $this->fetch('/index');
 	}
 
 	//真主页方法
-	public function main() {
+	public function main(){
 		//先判断是否是管理员
 		if ($this->isAdmin()) {
 			//如果是管理员 渲染main模板
 			//查询统计数据
 			//密码条数（总）
-			$pass= new \app\common\model\Password();
+			$pass = new \app\common\model\Password();
 			$total['pass'] = $pass->count();
 			//亲友数量（总量减1）
 			$user = new \app\common\model\User();
 			$total['user'] = $user->count();
-			$total['user']= $total['user'] - 1;
+			$total['user'] = $total['user'] - 1;
 			//日记数量(总)
 			$diary = new \app\common\model\DiaryData();
 			$total['diary'] = $diary->count();
@@ -53,9 +54,9 @@ class Index extends AdminBase {
 			//zend引擎版本
 			$sys_info['zend_version'] = zend_version();
 			//mb_string拓展
-			$sys_info['mb_string'] = function_exists("mb_strlen") ? '支持':'不支持';
+			$sys_info['mb_string'] = function_exists("mb_strlen") ? '支持' : '不支持';
 			//php_openssl拓展
-			$sys_info['openssl'] = function_exists("openssl_encrypt") ? '支持':'不支持';
+			$sys_info['openssl'] = function_exists("openssl_encrypt") ? '支持' : '不支持';
 			//curl支持
 			$sys_info['curl'] = function_exists('curl_init') ? 'YES' : 'NO';
 			//GD库版本
@@ -69,39 +70,39 @@ class Index extends AdminBase {
 			//访问ip
 			$sys_info['user_ip'] = $this->request->ip();
 			//分配变量到模板
-			$this->assign('total',$total);
-			$this->assign('sys_info',$sys_info);
+			$this->assign('total', $total);
+			$this->assign('sys_info', $sys_info);
 			//并且准备需要的参数
 			return $this->fetch('/main');
 		} else {
-			$uid = session('uid','','admin');
+			$uid = session('uid', '', 'admin');
 			//密码条数（个人总数）
-			$pass= new \app\common\model\Password();
-			$total['pass'] = $pass->where('uid',$uid)->count();
+			$pass = new \app\common\model\Password();
+			$total['pass'] = $pass->where('uid', $uid)->count();
 			//日记数量(个人总数)
 			$diary = new \app\common\model\Diary();
-			$total['diary'] = $diary->where('uid',$uid)->where('diary',1)->count();
+			$total['diary'] = $diary->where('uid', $uid)->where('diary', 1)->count();
 			//标记数量
-			$total['tag'] = $diary->where('uid',$uid)->where('tag',1)->count();
+			$total['tag'] = $diary->where('uid', $uid)->where('tag', 1)->count();
 			//备忘总数
 			$memo = new \app\common\model\Memo();
-			$total['memo'] = $memo->where('uid',$uid)->count();
+			$total['memo'] = $memo->where('uid', $uid)->count();
 			//分配变量到模板
-			$this->assign('total',$total);
+			$this->assign('total', $total);
 			//如果不是管理员 渲染普通用户主页模板
 			return $this->fetch('/default');
 		}
 	}
 
 	//使用教程方法
-	public function help() {
-		$data = Db::name('help')->where('id',1)->find();
-		$this->assign('data',$data);
+	public function help(){
+		$data = Db::name('help')->where('id', 1)->find();
+		$this->assign('data', $data);
 		return $this->fetch('/help');
 	}
 
 	//用户登录方法
-	public function login() {
+	public function login(){
 		if ($this->request->isPost()) {
 			$referer = $this->request->server('HTTP_REFERER');
 			$host = $this->request->host(true);
@@ -111,11 +112,11 @@ class Index extends AdminBase {
 			$key = config('app.rsa_private_key');
 			//获取表单数据
 			$data = [
-			                '__token__'  => UserLogic::rsaDecrypt($key, $this->request->header('Access-token')),  
-			                'host' => UserLogic::rsaDecrypt($key, $this->request->header('Access-token2')), 
-			                'username' => UserLogic::rsaDecrypt($key, input('post.username')),  
-			                'password' => UserLogic::rsaDecrypt($key, input('post.password')),   
-			            ];
+				'__token__'  => UserLogic::rsaDecrypt($key, $this->request->header('Access-token')),
+				'host' => UserLogic::rsaDecrypt($key, $this->request->header('Access-token2')),
+				'username' => UserLogic::rsaDecrypt($key, input('post.username')),
+				'password' => UserLogic::rsaDecrypt($key, input('post.password')),
+			];
 			if (strtolower($data['host']) !== $host) return json($this->res);
 			$result = $this->validate($data, '\app\common\validate\User.login');
 			if ($result !== true) {
@@ -141,7 +142,7 @@ class Index extends AdminBase {
 	}
 
 	//二次验证方法
-	public function twoAuth() {
+	public function twoAuth(){
 		$enc = new \app\common\model\UserEnc();
 		$res = $enc->getEnc(session('uid', '', 'admin'));
 		if ($this->request->isPost()) {
@@ -151,10 +152,10 @@ class Index extends AdminBase {
 			if (!UserLogic::checkLogin($referer, $host, $url)) return json($this->res);
 			$key = config('app.rsa_private_key');
 			$data = [
-			                '__token__'  => UserLogic::rsaDecrypt($key, $this->request->header('Access-token')),  
-			                'host' => UserLogic::rsaDecrypt($key, $this->request->header('Access-token2')), 
-			                'twoAuth' => UserLogic::rsaDecrypt($key, input('post.password')),  
-			            ];
+				'__token__'  => UserLogic::rsaDecrypt($key, $this->request->header('Access-token')),
+				'host' => UserLogic::rsaDecrypt($key, $this->request->header('Access-token2')),
+				'twoAuth' => UserLogic::rsaDecrypt($key, input('post.password')),
+			];
 			if (strtolower($data['host']) !== $host) return json($this->res);
 			$result = $this->validate($data, '\app\common\validate\User.two_auth');
 			if ($result !== true) {
@@ -187,7 +188,7 @@ class Index extends AdminBase {
 	}
 
 	//设置安全密码 专供除管理员之外的亲友使用
-	public function setTwoAuth() {
+	public function setTwoAuth(){
 		$enc = new \app\common\model\UserEnc();
 		$res = $enc->getEnc(session('uid', '', 'admin'));
 		if ($this->request->isPost()) {
@@ -197,10 +198,10 @@ class Index extends AdminBase {
 			if (!UserLogic::checkLogin($referer, $host, $url)) return json($this->res);
 			$key = config('app.rsa_private_key');
 			$data = [
-			                '__token__'  => UserLogic::rsaDecrypt($key, $this->request->header('Access-token')),  
-			                'host' => UserLogic::rsaDecrypt($key, $this->request->header('Access-token2')), 
-			                'twoAuth' => UserLogic::rsaDecrypt($key, input('post.password')),  
-			            ];
+				'__token__'  => UserLogic::rsaDecrypt($key, $this->request->header('Access-token')),
+				'host' => UserLogic::rsaDecrypt($key, $this->request->header('Access-token2')),
+				'twoAuth' => UserLogic::rsaDecrypt($key, input('post.password')),
+			];
 			if (strtolower($data['host']) !== $host) return json($this->res);
 			$result = $this->validate($data, '\app\common\validate\User.two_auth');
 			if ($result !== true) {
@@ -238,7 +239,7 @@ class Index extends AdminBase {
 	}
 
 	//用户退出登录方法
-	public function logout() {
+	public function logout(){
 		//记录到用户日志
 		UserLog::addLog(session('username', '', 'admin'), '退出', 1, '用户退出成功！', $this->request->ip());
 		//清除cookie和session
@@ -247,7 +248,7 @@ class Index extends AdminBase {
 	}
 
 	//修改密码方法
-	public function myPwd() {
+	public function myPwd(){
 		if ($this->request->isPost()) {
 			$referer = $this->request->server('HTTP_REFERER');
 			$host = $this->request->host(true);
@@ -255,11 +256,11 @@ class Index extends AdminBase {
 			if (!UserLogic::checkLogin($referer, $host, $url)) return json($this->res);
 			$key = config('app.rsa_private_key');
 			$data = [
-			                '__token__'  => UserLogic::rsaDecrypt($key, $this->request->header('Access-token')),  
-			                'host' => UserLogic::rsaDecrypt($key, $this->request->header('Access-token2')), 
-			                'password' => UserLogic::rsaDecrypt($key, input('post.old_password')),  
-			                'new_password' => UserLogic::rsaDecrypt($key, input('post.new_password')),  
-			            ];
+				'__token__'  => UserLogic::rsaDecrypt($key, $this->request->header('Access-token')),
+				'host' => UserLogic::rsaDecrypt($key, $this->request->header('Access-token2')),
+				'password' => UserLogic::rsaDecrypt($key, input('post.old_password')),
+				'new_password' => UserLogic::rsaDecrypt($key, input('post.new_password')),
+			];
 			if (strtolower($data['host']) !== $host) return json($this->res);
 			$result = $this->validate($data, '\app\common\validate\User.mypwd');
 			if ($result !== true) {
@@ -287,7 +288,7 @@ class Index extends AdminBase {
 	}
 
 	//获取系统日志接口
-	public function getLog() {
+	public function getLog(){
 		if ($this->request->isPost()) {
 			$referer = $this->request->server('HTTP_REFERER');
 			$host = $this->request->host(true);
@@ -295,11 +296,11 @@ class Index extends AdminBase {
 			if (!UserLogic::checkLogin($referer, $host, $url)) return json($this->res);
 			$key = config('app.rsa_private_key');
 			$data = [
-			                '__token__'  => UserLogic::rsaDecrypt($key, $this->request->header('Access-token')),  
-			                'host' => UserLogic::rsaDecrypt($key, $this->request->header('Access-token2')), 
-			                'limit' => input('post.limit'),  
-			                'page' => input('post.page'),  
-			            ];
+				'__token__'  => UserLogic::rsaDecrypt($key, $this->request->header('Access-token')),
+				'host' => UserLogic::rsaDecrypt($key, $this->request->header('Access-token2')),
+				'limit' => input('post.limit'),
+				'page' => input('post.page'),
+			];
 			if (strtolower($data['host']) !== $host) return json($this->res);
 			$result = $this->validate($data, '\app\common\validate\Paging.default');
 			if ($result !== true) {
@@ -332,9 +333,9 @@ class Index extends AdminBase {
 		$this->res['data'] = '';
 		return json($this->res);
 	}
-    
+
 	//清空系统日志接口
-	public function delLog() {
+	public function delLog(){
 		if ($this->request->isPost()) {
 			$referer = $this->request->server('HTTP_REFERER');
 			$host = $this->request->host(true);
@@ -342,10 +343,10 @@ class Index extends AdminBase {
 			if (!UserLogic::checkLogin($referer, $host, $url)) return json($this->res);
 			$key = config('app.rsa_private_key');
 			$data = [
-			                '__token__'  => UserLogic::rsaDecrypt($key, $this->request->header('Access-token')),  
-			                'host' => UserLogic::rsaDecrypt($key, $this->request->header('Access-token2')), 
-			                'id' => UserLogic::rsaDecrypt($key, input('post.id')),  
-			            ];
+				'__token__'  => UserLogic::rsaDecrypt($key, $this->request->header('Access-token')),
+				'host' => UserLogic::rsaDecrypt($key, $this->request->header('Access-token2')),
+				'id' => UserLogic::rsaDecrypt($key, input('post.id')),
+			];
 			if (strtolower($data['host']) !== $host) return json($this->res);
 			$result = $this->validate($data, '\app\common\validate\Paging.idt');
 			if ($result !== true) {
