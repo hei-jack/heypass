@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="renderer" content="webkit" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- 引入ico图标 -->
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+  <title>HeyPass-使用教程</title>
+  <link rel="stylesheet" type="text/css" href="__CSS__/base.css" />
+  <link rel="stylesheet" type="text/css" href="__CSS__/style.css" />
+  <style>
+    body {
+      background: #ede7da url("__IMG__/body_bg.png") repeat;
+      background-image: url("__IMG__/body_bg.png");
+      background-position-x: initial;
+      background-position-y: initial;
+      background-size: initial;
+      background-repeat-x: repeat;
+      background-repeat-y: repeat;
+      background-attachment: initial;
+      background-origin: initial;
+      background-clip: initial;
+      background-color: rgb(237, 231, 218);
+    }
+
+    #show {
+      line-height: 24px;
+    }
+
+    /*处理ie9无法居中问题*/
+    .col-lg-7 {
+      display: block;
+    }
+
+    /*设置video-js 也就是所有的视频和音频宽度为100% 自适应*/
+    .video-js {
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 容器 -->
+  <div class="container-fluid">
+    <div class="row">
+      <!-- 水平居中 -->
+      <div class="col-lg-7 m-lr-auto">
+
+        <div id="output" class="p-20" style="min-height: 100vh;">
+          {//输出教程内容}
+          <h1>{$data.title}</h1>
+          {$data.content|raw}
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="__JS__/heigobacktop.min.js"></script>
+  <script>
+    //实例化返回顶部插件
+    var back = new HeiGoBackTop();
+    back.onBeforeCreate(function () {
+      //随机颜色
+      this.themes = Math.round(Math.random() * 11);
+      this.show_height = 150;
+    });
+  </script>
+</body>
+
+</html>

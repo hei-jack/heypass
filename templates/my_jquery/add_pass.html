@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="renderer" content="webkit" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- 引入ico图标 -->
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+  <title>HeyPass-新增密码</title>
+  <link rel="stylesheet" type="text/css" href="__CSS__/materialdesignicons.min.css">
+  <link rel="stylesheet" type="text/css" href="__CSS__/base.css">
+  <link rel="stylesheet" type="text/css" href="__CSS__/style.css">
+
+</head>
+
+<body>
+  <!-- 新增密码 -->
+  <div class="container-fluid p-t-15">
+
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card">
+          <header class="card-header">
+            <div class="card-title">新增密码</div>
+          </header>
+          <div class="card-body">
+
+            <div class="form-group col-md-12">
+              <label for="cid">分类 <span class="code">*</span></label>
+              <div class="form-controls">
+                <select name="type" class="form-control" id="cid">
+                  <option value="-1">-- 请选择分类 --</option>
+
+                  {volist name="cat" id="vo" empty="$empty" }
+                  <option value="{$vo.id}">{$vo.zh}</option>
+                  {/volist}
+
+                </select>
+              </div>
+              <small class="help-block code">请注意： 如果有特殊需求或者超长的内容，建议将其保存到备忘中。</small>
+            </div>
+
+            <div class="form-group col-md-12">
+              <label for="title">关联名称 <span class="code">*</span></label>
+              <input type="text" class="form-control" id="title" name="title" value="" placeholder="请输入关联名称" />
+              <small class="help-block">只允许汉字、大小写字母和数字，下划线_及破折号-</small>
+            </div>
+
+            <div class="form-group col-md-12">
+              <label for="username">账号 <span class="code">*</span></label>
+              <input type="text" class="form-control" id="username" name="username" value="" placeholder="请输入账号" />
+            </div>
+
+            <div class="form-group col-md-12">
+              <label for="password">密码 <span class="code">*</span></label>
+              <input type="password" class="form-control" id="password" name="password" value="" placeholder="请输入密码" />
+            </div>
+
+            <div class="form-group col-md-12">
+              <button id="show" class="btn btn-xs btn-dark">显示</button>
+              <button id="rand" class="btn btn-xs btn-dark">随机密码</button>
+              <small class="help-block code">请注意：由于系统安全机制，账号密码新增成功后，部分危险字符可能会被系统拦截过滤，请到密码列表页面核对是否与新增一致，避免造成不必要的麻烦。</small>
+            </div>
+
+            <div class="form-group col-md-12">
+              <label for="url">关联网址</label>
+              <input type="text" class="form-control" id="url" name="url" value="" placeholder="请输入关联网址" />
+              <small class="help-block">可选。如需输入，需输入"http://"或"https://"等开头的网址，不能超过50字符</small>
+            </div>
+
+            <div class="form-group col-md-12">
+              <label for="other">备注</label>
+              <textarea class="form-control" id="other" rows="3" name="other" placeholder="请输入备注"></textarea>
+              <small class="help-block">可选。允许汉字、大小写字母、数字，特殊符号,/._:，。-?？等，不能超过50个字符</small>
+            </div>
+
+            <div class="form-group col-md-12">
+              <button type="submit" id="submit" class="btn btn-primary">新增</button>
+              <input type="hidden" name="token" value="{$Request.token}" />
+              <input type="hidden" name="sign" value="{$Think.config.rsa_public_key}" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="__JS__/my.jquery.js"></script>
+  <script src="__JS__/jsencrypt/jsencrypt.min.js"></script>
+  <script src="__JS__/common.js"></script>
+  <script type="text/javascript">
+    $.ready(function () {
+
+      //密码显示隐藏特效
+      $('#show').on('click', function () {
+        this.innerText = this.innerText === '显示' ? '隐藏' : '显示';
+        var type = $('#password').getAttribute('type') === 'text' ? 'password' : 'text';
+        $('#password').setAttribute('type', type);
+      });
+
+      //当rand按钮发生点击事件时
+      $('#rand').on('click', function () {
+        //打开新标签页
+        window.parent.$.home.createTab('{:url("admin/Password/rand")}', '随机密码');
+      });
+
+
+      //当保存按钮发生点击事件时
+      $('#submit').on('click', function () {
+
+        //获取分类
+        var cid = Number($('#cid').value);
+        if (cid < 1 || isNaN(cid)) {
+          showTopMessage('新增失败,请先选择分类！', false, 1500);
+          return;
+        }
+
+        //关联名称
+        var title = $('#title').value;
+        if (title === 0 || len > 20) {
+          showTopMessage('新增失败,关联名称长度有误！', false, 1500);
+          return;
+        }
+
+        var reg = /[a-zA-z0-9\u4e00-\u9fa5_-]+/g;
+        if (!reg.test(title)) {
+          showTopMessage('新增失败,关联名称格式有误！', false, 1500);
+          return;
+        }
+
+        //获取账号
+        var username = $('#username').value;
+        var len = username.length;
+        //检查长度
+        if (len === 0 || len > 50) {
+          showTopMessage('新增失败,账号长度有误！', false, 1500);
+          return;
+        }
+        //不允许包含空白字符
+        reg = /[\s]+/g;
+
+        //检查格式
+        if(reg.test(username)){
+          showTopMessage('新增失败,账号格式有误！',false,1500);
+          return;
+        }
+
+        //密码
+        var password = $('#password').value;
+        len = password.length;
+        if (len === 0 || len > 50) {
+          showTopMessage('新增失败,密码长度有误！', false, 1500);
+          return;
+        }
+        reg = /[\s]+/g;
+        if(reg.test(password)){
+          showTopMessage('新增失败,密码格式有误！',false,1500);
+          return;
+        }
+
+        //关联网址
+        var url = $('#url').value;
+        len = url.length;
+        if (len !== 0) {
+          reg = /^[a-zA-Z0-9_?\.:=/-]+$/g;
+          if (!reg.test(url)) {
+            showTopMessage('新增失败,关联网址格式有误！', false, 1500);
+            return;
+          }
+        }
+        if (len > 50) {
+          showTopMessage('新增失败,关联网址长度有误！', false, 1500);
+          return;
+        }
+        
+
+        //备注
+        var other = $('#other').value;
+        len = other.length;
+        if(len !== 0){
+          reg = /^[\u4e00-\u9fa5a-zA-Z0-9,\/\._:，。\?？-]+/g;
+          if (!reg.test(other)) {
+            showTopMessage('新增失败,备注格式有误！', false, 1500);
+            return;
+          }
+        }
+        if(len > 50){
+          showTopMessage('新增失败,备注长度有误！', false, 1500);
+          return;
+        }
+
+        $.cookie('heypass_token', dataHelper('HeyPass' + Math.random()));
+
+        $.ajax({
+          url: getPathName(),
+          type: 'post',
+          dataType: 'json',
+          data: {
+            'cid': cid,
+            'username': dataHelper(username),
+            'password': dataHelper(password),
+            'url': dataHelper(url),
+            'title': dataHelper(title),
+            'other': dataHelper(other),
+          },
+          headers: {
+            'Access-token': dataHelper($('[name="token"]').value),
+            'Access-token2': dataHelper(window.location.host),
+          },
+          success: function (res, code, xmlhttp) {
+            if (res.status === 200) {
+              showTopMessage('新增成功，请前往密码列表页面核对~', true, 1500);
+              return;
+            }
+            //刷新token
+            refreshToken();
+            showTopMessage(res.mess + ',' + res.data, false, 1500);
+          },
+          error: function (obj, status) {
+            // console.log(status);
+            showTopMessage('请检查网络情况或稍后再试', false, 1500);
+          }
+        });
+      });
+    });
+  </script>
+</body>
+
+</html>

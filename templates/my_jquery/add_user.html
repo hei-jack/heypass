@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="renderer" content="webkit" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- 引入ico图标 -->
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+  <title>HeyPass-新增亲友</title>
+  <link rel="stylesheet" type="text/css" href="__CSS__/materialdesignicons.min.css">
+  <link rel="stylesheet" type="text/css" href="__CSS__/base.css">
+  <link rel="stylesheet" type="text/css" href="__CSS__/style.css">
+</head>
+
+<body>
+  <!-- 新增亲友 -->
+  <div class="container-fluid p-t-15">
+
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card">
+          <header class="card-header">
+            <div class="card-title">新增亲友</div>
+          </header>
+          <div class="card-body">
+
+            <div class="form-group col-md-12">
+              <label for="username">用户名</label>
+              <input type="text" class="form-control" id="username" name="username" value="" placeholder="请输入账号" />
+              <small class="help-block">用户名设置之后无法更改，首位必须为字母，且长度在8-20位，只允许大小写字母、数字及下划线_</small>
+            </div>
+
+            <div class="form-group col-md-12">
+              <label for="password">密码</label>
+              <input type="password" class="form-control" id="password" name="password" value="" placeholder="请输入密码" />
+              <small class="help-block">密码设置之后只有亲友自己才能更改，首位必须为字母，且长度在10-20位，只允许大小写字母、数字及,-@#_</small>
+              <button id="show" class="btn btn-xs btn-dark">显示</button>
+            </div>
+
+            <div class="form-group col-md-12">
+              <label for="nickname">昵称</label>
+              <input type="text" class="form-control" id="nickname" name="nickname" value="" placeholder="请输入昵称" />
+              <small class="help-block">昵称只有管理员能设置和修改。</small>
+            </div>
+
+
+            <div class="form-group col-md-12">
+              <button type="submit" id="submit" class="btn btn-primary">新增</button>
+              <input type="hidden" name="token" value="{$Request.token}" />
+              <input type="hidden" name="sign" value="{$Think.config.rsa_public_key}" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="__JS__/my.jquery.js"></script>
+  <script src="__JS__/jsencrypt/jsencrypt.min.js"></script>
+  <script src="__JS__/common.js"></script>
+  <script type="text/javascript">
+    $.ready(function () {
+
+      //密码显示隐藏特效
+      $('#show').on('click',function(){
+        this.innerText = this.innerText === '显示' ? '隐藏':'显示';
+        var type = $('#password').getAttribute('type') === 'text' ? 'password':'text';
+        $('#password').setAttribute('type',type);
+      });
+
+
+      //当保存按钮发生点击事件时
+      $('#submit').on('click', function () {
+        //获取账号
+        var username = $('#username').value;
+        var len = username.length;
+        //检查长度
+        if(len < 8 || len > 20){
+          showTopMessage('新增失败,用户名长度有误！',false,1500);
+          return;
+        }
+        var reg = /^[a-z]{1}[a-z0-9_]{7,19}$/ig;
+        //检查格式
+        if(!reg.test(username)){
+          showTopMessage('新增失败,用户名格式有误！',false,1500);
+          return;
+        }
+
+        //密码
+        var password = $('#password').value;
+        len = password.length;
+        if(len < 10 || len > 20){
+          showTopMessage('新增失败,密码长度有误！',false,1500);
+          return;
+        }
+        reg = /^[a-z]{1}([a-z0-9]|[-@#_,]){9,19}$/ig;
+        if(!reg.test(password)){
+          showTopMessage('新增失败,密码格式有误！',false,1500);
+          return;
+        }
+
+        //昵称
+        var nickname = $('#nickname').value;
+        len = nickname.length;
+        if(len < 1 || len > 7){
+          showTopMessage('新增失败,昵称长度有误！',false,1500);
+          return;
+        }
+        reg = /^[a-zA-z0-9\u4e00-\u9fa5_]+$/g;
+        if(!reg.test(nickname)){
+          showTopMessage('新增失败,昵称格式有误！',false,1500);
+          return;
+        }
+
+        $.cookie('heypass_token', dataHelper('HeyPass' + Math.random()));
+
+        $.ajax({
+          url: getPathName(),
+          type: 'post',
+          dataType: 'json',
+          data: {
+            'username': dataHelper(username),
+            'password': dataHelper(password),
+            'nickname': dataHelper(nickname),
+          },
+          headers: {
+            'Access-token': dataHelper($('[name="token"]').value),
+            'Access-token2': dataHelper(window.location.host),
+          },
+          success: function (res, code, xmlhttp) {
+            if (res.status === 200) {
+              showTopMessage('新增成功，请前往亲友管理页面查看~', true, 1500);
+              return;
+            }
+            //刷新token
+            refreshToken();
+            showTopMessage(res.mess + ',' + res.data, false, 1500);
+          },
+          error: function (obj, status) {
+            // console.log(status);
+            showTopMessage('请检查网络情况或稍后再试', false, 1500);
+          }
+        });
+      });
+    });
+  </script>
+</body>
+
+</html>

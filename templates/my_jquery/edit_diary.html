@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="renderer" content="webkit" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- 引入ico图标 -->
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+  <title>HeyPass-编辑日记</title>
+  <link rel="stylesheet" type="text/css" href="__CSS__/materialdesignicons.min.css">
+  <link rel="stylesheet" type="text/css" href="__CSS__/base.css">
+  <link rel="stylesheet" type="text/css" href="__CSS__/style.css">
+  <link href="__JS__/video.js/video.min.css" rel="stylesheet">
+  <!-- video Fantasy主题 -->
+  <link href="__JS__/video.js/themes_fantasy.min.css" rel="stylesheet">
+  <style>
+    .tooltip .tooltip-top {
+      left: 50%;
+      top: -110%;
+      margin-left: -35px;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 编辑日记 -->
+  <div class="container-fluid p-t-15">
+
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card" style="margin-bottom: 0;">
+          <header class="card-header">
+            <div class="card-title">编辑日记</div>
+          </header>
+          <div class="card-body">
+
+            <div class="form-group text-center">
+              <button type="button" id="show" class="btn btn-danger btn-round btn-w-md" data-flag="0">显示</button>
+              <button type="submit" id="submit" class="btn btn-success btn-round btn-w-md m-r-5">保存</button>
+              <input type="hidden" name="token" value="{$Request.token}" />
+              <input type="hidden" name="sign" value="{$Think.config.rsa_public_key}" />
+              <input type="hidden" class="hidden" id="token2" name="token2" value="{$token2}" />
+              <input type="hidden" class="hidden" id="sign2" name="sign2" value="{$sign2}" />
+            </div>
+
+            <div class="form-group">
+              <label for="title">日期 <span class="code">*</span></label>
+              <input type="text" class="form-control" id="date" name="date" value="{$date}" data-value="{$date}" placeholder="请输入日期" disabled="disabled" />
+            </div>
+
+            <div class="form-group p-lr-15">
+              <div class="lyear-divider">内容</div>
+              <div class="btn-toolbar">
+                <div class="btn-group mr-2">
+                  <button class="btn btn-default tooltip" id="save"><i class="mdi mdi-floppy"></i><span
+                      class="tooltip-text tooltip-top">保存</span></button>
+                </div>
+                <div class="btn-group mr-2">
+                  <button class="btn btn-default tooltip" id="bold"><i class="mdi mdi-format-bold"></i><span
+                      class="tooltip-text tooltip-top">粗体</span></button>
+                  <button class="btn btn-default tooltip" id="italic"><i class="mdi mdi-format-italic"></i><span
+                      class="tooltip-text tooltip-top">斜体</span></button>
+                  <button class="btn btn-default tooltip" id="strikeout"><i class="mdi mdi-format-strikethrough-variant"></i><span
+                      class="tooltip-text tooltip-top">删除线</span></button>
+                  <button class="btn btn-default tooltip" id="quote"><i class="mdi mdi-format-pilcrow"></i><span
+                      class="tooltip-text tooltip-top">引述</span></button>
+                </div>
+                <div class="btn-group mr-2">
+                  <button class="btn btn-default tooltip" id="h1"><i class="mdi mdi-format-header-1"></i><span
+                      class="tooltip-text tooltip-top">一级标题</span></button>
+                  <button class="btn btn-default tooltip"  id="h2"><i class="mdi mdi-format-header-2"></i><span
+                      class="tooltip-text tooltip-top">二级标题</span></button>
+                  <button class="btn btn-default tooltip" id="h3"><i class="mdi mdi-format-header-3"></i><span
+                      class="tooltip-text tooltip-top">三级标题</span></button>
+                  <button class="btn btn-default tooltip" id="h4"><i class="mdi mdi-format-header-4"></i><span
+                      class="tooltip-text tooltip-top">四级标题</span></button>
+                  <button class="btn btn-default tooltip" id="h5"><i class="mdi mdi-format-header-5"></i><span
+                      class="tooltip-text tooltip-top">五级标题</span></button>
+                  <button class="btn btn-default tooltip" id="h6"><i class="mdi mdi-format-header-6"></i><span
+                      class="tooltip-text tooltip-top">六级标题</span></button>
+                </div>
+                <div class="btn-group mr-2">
+                  <button class="btn btn-default tooltip" id="ul"><i class="mdi mdi-format-list-checkbox"></i><span
+                      class="tooltip-text tooltip-top">无序列表</span></button>
+                  <button class="btn btn-default tooltip" id="ol"><i class="mdi mdi-format-list-numbered"></i><span
+                      class="tooltip-text tooltip-top">有序列表</span></button>
+                  <button class="btn btn-default tooltip" id="line-code"><i class="mdi mdi-code-tags"></i><span
+                      class="tooltip-text tooltip-top">行内代码</span></button>
+                  <button class="btn btn-default tooltip" id="code"><i class="mdi mdi-code-not-equal-variant"></i><span
+                      class="tooltip-text tooltip-top">块状代码</span></button>
+                  <button class="btn btn-default tooltip" id="table"><i class="mdi mdi-table"></i><span
+                      class="tooltip-text tooltip-top">表格</span></button>
+                </div>
+                <div class="btn-group mr-2">
+                  <button class="btn btn-default tooltip" id="link"><i class="mdi mdi-link"></i><span
+                      class="tooltip-text tooltip-top">添加链接</span></button>
+                  <button class="btn btn-default tooltip" id="ref-link"><i class="mdi mdi-link-plus"></i><span
+                      class="tooltip-text tooltip-top">引用链接</span></button>
+                  <button class="btn btn-default tooltip" id="img"><i class="mdi mdi-image-area"></i><span
+                      class="tooltip-text tooltip-top">外链图片</span></button>
+                  <button class="btn btn-default tooltip" id="music"><i class="mdi mdi-music"></i><span
+                      class="tooltip-text tooltip-top">外链音乐</span></button>
+                  <button class="btn btn-default tooltip" id="video"><i class="mdi mdi-video"></i><span
+                      class="tooltip-text tooltip-top">外链视频</span></button>
+                </div>
+                <div class="btn-group">
+                  <button class="btn btn-default tooltip" id="underline"><i class="mdi mdi-format-underline"></i><span
+                      class="tooltip-text tooltip-top">下划线</span></button>
+                  <button class="btn btn-default tooltip" id="hr"><i class="mdi mdi-window-minimize"></i><span
+                      class="tooltip-text tooltip-top">横线</span></button>
+                  <button class="btn btn-default tooltip" id="clear"><i class="mdi mdi-format-clear"></i><span
+                      class="tooltip-text tooltip-top">清空</span></button>
+                  <button class="btn btn-default tooltip" id="hide"><i class="mdi mdi-eye-off"></i><span
+                        class="tooltip-text tooltip-top">隐藏</span></button>
+                  <button class="btn btn-default tooltip" id="help"><i class="mdi mdi-help-circle"></i><span
+                      class="tooltip-text tooltip-top">帮助</span></button>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-12 fs-0">
+              <div class="col-6 p-0 middle" id="left-wrapper">
+                <div class="editor-wrapper bg-inverse p-20">
+                  <textarea id="editor" class="bg-inverse" rows="10" data-value="{$content}" placeholder="请输入内容 右侧预览窗口需要自己滑动哟 也可点击右上角隐藏按钮将其隐藏">{$content}</textarea>
+                </div>
+              </div>
+
+              <div class="col-6 p-0 middle" id="right-wrapper">
+                <div class="output-wrapper p-20">
+                  <div id="output">
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+
+  </div>
+  <script src="__JS__/my.jquery.js"></script>
+  <script src="__JS__/jsencrypt/jsencrypt.min.js"></script>
+  <script src="__JS__/crypto-js/aes.js"></script>
+  <!-- showdown.js -->
+  <script src="__JS__/showdown/showdown.min.js"></script>
+  <script src="__JS__/autosize.js/autosize.min.js"></script>
+  <script src="__JS__/video.js/video.min.js"></script>
+  <script src="__JS__/video.js/zh-CN.min.js"></script>
+  <script src="__JS__/editor.js"></script>
+  <script src="__JS__/common.js"></script>
+  <script type="text/javascript">
+    $.ready(function () {
+      //初始化编辑器
+      var editor = $.editor('edit_diray');
+      editor.init();
+
+      //当显示按钮发生点击事件时
+      $('#show').on('click',function(){
+        if(this.getAttribute('data-flag') !== '0') return;
+        //开始解密
+        var el = $('#date');
+        var dec = dataHelperAES(el.getAttribute('value'));
+        el.value = dec;
+        el.setAttribute('data-value', dec);
+        el = $('#editor');
+        dec = dataHelperAES(el.getAttribute('data-value'));
+        //将解密的数据转换为html重新设置回去
+        el.setAttribute('data-value', entityToString(dec));
+        //转换回markdown
+        dec = editor.parseHtml(dec);
+        el.value = dec;
+        this.setAttribute('data-flag','1');
+        //解析markdown到预览区
+        editor.parseMd();
+      });
+
+      //当保存按钮发生点击事件时
+      $('#submit').on('click', function () {
+        //日期
+        var date = $('#date').value;
+        var len = date.length;
+        if (len !== 8) {
+          showTopMessage('保存失败,日期长度有误！', false, 1500);
+          return;
+        }
+
+        var reg = /^[0-9]+$/g;
+        if (!reg.test(date)) {
+          showTopMessage('保存失败,日期格式有误！', false, 1500);
+          return;
+        }
+
+        //获取多行文本输入框的值
+        var val = $('#editor').value;
+        len = val.length;
+        if(len === 0){
+          showTopMessage('保存失败,内容不能为空！', false, 1500);
+          return;
+        }
+
+        //不为空则转换为html
+        var converter = new showdown.Converter({
+          tables: true, //解析表格
+          strikethrough: true, //解析双波浪线删除
+          openLinksInNewWindow: true, //在新窗口打开所有链接
+        });
+
+        var html = converter.makeHtml(val);
+
+        $.cookie('heypass_token', dataHelper('HeyPass' + Math.random()));
+
+        //校验通过发送ajax请求
+        $.ajax({
+          url: getPathName(),
+          type: 'post',
+          dataType: 'json',
+          data: {
+            'id': getUrlParam('id'),
+            'date': dataHelper(date),
+            'content': dataHelperCBC(html),
+          },
+          headers: {
+            'Access-token': dataHelper($('[name="token"]').value),
+            'Access-token2': dataHelper(window.location.host),
+          },
+          success: function (res, code, xmlhttp) {
+            if (res.status === 200) {
+              showTopMessage('保存成功，请前往日记列表页面查看~', true, 1500);
+              return;
+            }
+            //刷新token
+            refreshToken();
+            showTopMessage(res.mess + ',' + res.data, false, 1500);
+          },
+          error: function (obj, status) {
+            showTopMessage('保存失败，请检查网络情况或稍后再试', false, 1500);
+          }
+        });
+
+      });
+
+    });
+  </script>
+</body>
+
+</html>
