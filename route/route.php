@@ -38,6 +38,7 @@ Route::group('admin',function(){
     Route::rule('cat_add','admin/Category/add','GET|POST');
     Route::rule('cat_del','admin/Category/del','GET|POST');
     Route::rule('cat_edit','admin/Category/edit','GET|POST');
+    Route::rule('cat_num','admin/Category/getSubtotal','GET|POST');
     //密码
     Route::rule('pwd_list','admin/Password/index','GET|POST');
     Route::rule('pwd_add','admin/Password/add','GET|POST');
