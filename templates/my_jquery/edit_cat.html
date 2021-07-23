@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="renderer" content="webkit" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- 引入ico图标 -->
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+  <title>HeyPass-编辑分类</title>
+  <link rel="stylesheet" type="text/css" href="__CSS__/materialdesignicons.min.css">
+  <link rel="stylesheet" type="text/css" href="__CSS__/base.css">
+  <link rel="stylesheet" type="text/css" href="__CSS__/style.css">
+</head>
+
+<body>
+  <!-- 编辑分类 -->
+  <div class="container-fluid p-t-15">
+
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card">
+          <header class="card-header">
+            <div class="card-title">编辑分类</div>
+          </header>
+          <div class="card-body">
+
+            <div class="form-group col-md-12">
+              <label for="en">分类标识</label>
+              <input type="text" class="form-control" id="en" name="en" value="{$cat.c_en}" placeholder="请输入分类标识" disabled="disabled" />
+              <small class="help-block">暂时只允许编辑分类名称</small>
+            </div>
+
+            <div class="form-group col-md-12">
+              <label for="zh">分类名称</label>
+              <input type="text" class="form-control" id="zh" name="zh" value="{$cat.c_zh}" data-value="{$cat.c_zh}" placeholder="请输入分类名称" />
+              <small class="help-block">最多不能超过20位，只能是汉字</small>
+            </div>
+
+            <div class="form-group col-md-12">
+              <button type="submit" id="submit" class="btn btn-primary">保存</button>
+              <input type="hidden" name="token" value="{$Request.token}" />
+              <input type="hidden" name="sign" value="{$Think.config.rsa_public_key}" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="__JS__/my.jquery.js"></script>
+  <script src="__JS__/jsencrypt/jsencrypt.min.js"></script>
+  <script src="__JS__/common.js"></script>
+  <script type="text/javascript">
+    $.ready(function () {
+      //当保存按钮发生点击事件时
+      $('#submit').on('click', function () {
+        //获取分类标识
+        var en = $('#en').value;
+        var len = en.length;
+        //检查长度
+        if(len === 0 || len > 20){
+          showTopMessage('保存失败,分类标识长度有误！',false,1500);
+          return;
+        }
+        var reg = /^[a-z0-9_-]+$/ig;
+        //检查格式
+        if(!reg.test(en)){
+          showTopMessage('保存失败,分类标识格式有误！',false,1500);
+          return;
+        }
+
+        //分类名称
+        var zh = $('#zh').value;
+        len = zh.length;
+        if(len === 0 || len > 20){
+          showTopMessage('保存失败,分类名称长度有误！',false,1500);
+          return;
+        }
+        reg = /^[\u4e00-\u9fa5]+$/ig;
+        if(!reg.test(zh)){
+          showTopMessage('保存失败,分类名称格式有误！',false,1500);
+          return;
+        }
+
+        if(zh === $('#zh').getAttribute('data-value')){
+          showTopMessage('保存失败,您并没有修改任何信息~',false,1500);
+          return;
+        }
+
+        $.cookie('heypass_token', dataHelper('HeyPass' + Math.random()));
+
+        //验证通过 开始进行ajax请求
+        $.ajax({
+          url: getPathName(),
+          type: 'post',
+          dataType: 'json',
+          data: {
+            'id': getUrlParam('id'),
+            'en': dataHelper(en),
+            'zh': dataHelper(zh)
+          },
+          headers: {
+            'Access-token': dataHelper($('[name="token"]').value),
+            'Access-token2': dataHelper(window.location.host),
+          },
+          success: function (res, code, xmlhttp) {
+            if (res.status === 200) {
+              showTopMessage('保存成功，请前往密码分类页面查看~', true, 1500);
+              return;
+            }
+            //刷新token
+            refreshToken();
+            showTopMessage(res.mess + ',' + res.data, false, 1500);
+          },
+          error: function (obj, status) {
+            showTopMessage('请检查网络情况或稍后再试', false, 1500);
+          }
+        });
+      });
+    });
+  </script>
+</body>
+
+</html>

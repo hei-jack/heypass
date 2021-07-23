@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="renderer" content="webkit" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- 引入ico图标 -->
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+  <title>HeyPass-登录</title>
+  <link rel="stylesheet" type="text/css" href="__CSS__/materialdesignicons.min.css" />
+  <link rel="stylesheet" type="text/css" href="__CSS__/base.css" />
+  <link rel="stylesheet" type="text/css" href="__CSS__/login.css" />
+</head>
+
+<body>
+  <div class="login">
+    <h1>HeyPass</h1>
+    <div class="login-form">
+      <div class="close"></div>
+      <div class="head-info">
+        <div class="circle-purple"></div>
+        <div class="circle-red"></div>
+        <div class="circle-yellow"></div>
+      </div>
+      <!-- <div class="clear"></div> -->
+      <div class="avatar">
+        <img src="__IMG__/avatar1.png" alt="头像">
+      </div>
+      <form>
+        <!-- 去除name="username"属性之后也不会触发自动填充 或者也可以使用autocomplete="off"关闭自动填充属性 -->
+        <input type="text" name="username" placeholder="请输入账号" />
+        <input type="password" name="password" placeholder="请输入密码" />
+        <input type="hidden" name="token" value="{$Request.token}" />
+        <input type="hidden" name="sign" value="{$Think.config.rsa_public_key}" />
+        <!-- 滑动验证码 -->
+        <div id="no-captcha" class="no-captcha" style="display: none;">
+          <div class="no-captcha-bg"></div>
+          <div class="no-captcha-text" onselectstart="return false;">向右滑动验证</div>
+          <div class="no-captcha-btn"><img
+              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAADNklEQVRIS7WVTWgTURDHZ7JJA6W29aCIF78uKnpR9CKiBxG8iCCmaazFigSaNN1dkqgHK6kofqXd97IqWKEeiiItFCwUKYqigigKfoKCgkVpxQpClQo2bEdemYR2TZoo+G47OzO/ef95bx7Cf16Yyx+Px1dPTk76bNt+UYxpGMb+kZGRnr6+PqfcuqYBKrnjOL0A4COiRinlY3cCwzAOAcAZAOh3HCdk2/avciA5wEoGrAWAj4jYaFnWvZkJDMNoA4DjbBuora2tT6VSP0tB8hIlk8kV2WxW7WIdAIzxToZmJjBN8wgRnWLbTcdxgrZtf58Lkgcop2g0usTn8ynIRgD4QUQNUsoB104SAHCObbcQMWhZ1rdikFkA5dTS0rLY6/UqyCYAyCJig2VZ6ju/TNPUiUgoAyLe1TQtmE6nxwpB/gAop1gstkDTNJV0Kwc1CiF6XJAIEV1g2wMAqBNCfHZDCgKUU3Nz83y/368g29Q3EYWllJddcoUB4BL/f6RpWqCzs/PTTJ+iAOUUiUSqKioqFGQHB7UKIWzXTpqIqJttT71ebyCdTn/I+cwJYLn8LNdODkoKIdIzIbquNyBiTsLnU1NTgUwm8266R3Mdsdy/VCrlGR8f7yWi3SxHm5TyhAtSh4jX2fYaAAJCiDdlAcLhsK+yslJJtYsTHBVCnHQBQoh4lW2vVD86OjrelgSEw+EaTr6dg+NCiE5Xsw8CwPQBIKJnHo8nYFnW+5ISJZPJRXy7N3NwVEp50ZU8BgAZtj1haYZLNtk0zeVEpGRZP10J4gHLsq64ZDmMiKf5/0N1q8s6pq2trWs8Ho9Kvoor3yulvOY6nu1EdIxt9wEgWNZF03V9AyKq5EvVqODAflfys0SUZNsdHnpfC53IWU02TXMLy7IQANSUDAkhBl2an1dzkW1DiBgqa9gZhqFuq6q8CgC+8JC77dK8GxGb2DbID0/pca3r+m6WxQMAw/zgqAGWX4ZhqEtUxw29MTExEerq6irvwYnFYtWapqlqq4lon5RSHbdZS9f1PVxEf01NTX17e/tkIc3dtnwPEonEsmw2O09K+bJYoIKMjo72//WjX04l/+rzG+fDXChzW61+AAAAAElFTkSuQmCC"
+              alt="右滑箭头" draggable="false" /></div>
+        </div>
+      </form>
+      <div class="foot-info">
+        <input type="submit" value="登录" />
+      </div>
+    </div>
+  </div>
+
+  <!-- 引入myjquery -->
+  <script src="__JS__/my.jquery.js"></script>
+  <script src="__JS__/no-captcha.js"></script>
+
+  <!-- 最先引入CryptoJS加密插件 进行aes加密 弃用 最后决定使用rsa -->
+
+  <!-- 引入jsencrypt 进行rsa加密 -->
+  <!-- 3.2.0不兼容ie9 -->
+  <script src="__JS__/jsencrypt/jsencrypt.min.js"></script>
+  <script src="__JS__/common.js"></script>
+  <script src="__JS__/login.js"></script>
+</body>
+
+</html>

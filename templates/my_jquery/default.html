@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="renderer" content="webkit" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- 引入ico图标 -->
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+  <title>HeyPass-主页</title>
+  <link rel="stylesheet" type="text/css" href="__CSS__/materialdesignicons.min.css">
+  <link rel="stylesheet" type="text/css" href="__CSS__/base.css">
+  <link rel="stylesheet" type="text/css" href="__CSS__/style.css">
+  <style>
+    /*复选框图标*/
+    .custom-checkbox .custom-control-input:checked~.custom-control-label::after {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3e%3cpath fill='%23fff' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26l2.974 2.99L8 2.193z'/%3e%3c/svg%3e");
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 后台主页 default -->
+  <div class="container-fluid p-t-15">
+
+    <div class="row">
+      <div class="col-md-6 col-xl-3">
+        <div class="card bg-primary text-white">
+          <div class="card-body clearfix">
+            <div class="flex-box">
+              <span class="img-avatar img-avatar-48 bg-translucent"><i class="mdi mdi-key-variant fs-22"></i></span>
+              <span class="fs-22 lh-22 float-right">{$total.pass} 条</span>
+            </div>
+            <div class="text-right clear">密码记录</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-xl-3">
+        <div class="card bg-success text-white">
+          <div class="card-body clearfix">
+            <div class="flex-box">
+              <span class="img-avatar img-avatar-48 bg-translucent"><i class="mdi mdi-view-headline fs-22"></i></span>
+              <span class="fs-22 lh-22 float-right">{$total.diary} 篇</span>
+            </div>
+            <div class="text-right clear">日记总数</div>
+          </div>
+        </div>
+      </div>
+
+
+
+      <div class="col-md-6 col-xl-3">
+        <div class="card bg-danger text-white">
+          <div class="card-body clearfix">
+            <div class="flex-box">
+              <span class="img-avatar img-avatar-48 bg-translucent"><i class="mdi mdi-tag fs-22"></i></span>
+              <span class="fs-22 lh-22 float-right">{$total.tag} 天</span>
+            </div>
+            <div class="text-right clear">标记总数</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-xl-3">
+        <div class="card bg-purple text-white">
+          <div class="card-body clearfix">
+            <div class="flex-box">
+              <span class="img-avatar img-avatar-48 bg-translucent"><i class="mdi mdi-clipboard-text fs-22"></i></span>
+              <span class="fs-22 lh-22 float-right">{$total.memo} 条</span>
+            </div>
+            <div class="text-right clear">备忘总数</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <header class="card-header">
+            <div class="card-title">关于HeyPass</div>
+          </header>
+          <div class="card-body">
+            <div class="about-heypass">
+              <p>HeyPass是一款免费开源的个人隐私管理系统，目前实现了包括密码管理、日记管理、书写备忘等功能。</p>
+              <p>开源不易，如果这个小玩意对你有用，或者你挺喜欢，记得务必帮我来个star————支持和鼓励我发表更多更优秀的作品。</p>
+              <p class="code">当前版本：{:config('app_version')}</p>
+              <p class="code">项目地址：<a href="https://github.com/hei-jack/heypass"
+                  target="_blank">https://github.com/hei-jack/heypass</a></p>
+              <p class="code">From hei-jack</p>
+            </div>
+            <div class="from-group">
+              <button type="button" class="btn btn-success btn-round btn-w-md" id="help">使用教程</button>
+              <button type="button" class="btn btn-primary btn-round btn-w-md" id="rand">随机密码</button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12">
+        <div class="card">
+          <header class="card-header">
+            <div class="card-title">Hello World 数据来源于(hitokoto)</div>
+          </header>
+          <div class="card-body">
+            <div class="from-group text-center">
+              <!-- 多选框 -->
+              <div class="custom-control custom-checkbox custom-control-inline">
+                <input type="checkbox" class="custom-control-input" id="sentence-type1" name="sentence-type" value="d" />
+                <label class="custom-control-label" for="sentence-type1">文学</label>
+              </div>
+              <div class="custom-control custom-checkbox custom-control-inline">
+                <input type="checkbox" class="custom-control-input" id="sentence-type2" name="sentence-type" value="a" />
+                <label class="custom-control-label" for="sentence-type2">动画</label>
+              </div>
+              <div class="custom-control custom-checkbox custom-control-inline">
+                <input type="checkbox" class="custom-control-input" id="sentence-type3" name="sentence-type" value="j" />
+                <label class="custom-control-label" for="sentence-type3">网易云</label>
+              </div>
+              <div class="custom-control custom-checkbox custom-control-inline">
+                <input type="checkbox" class="custom-control-input" id="sentence-type4" name="sentence-type" value="i" />
+                <label class="custom-control-label" for="sentence-type4">诗词</label>
+              </div>
+              <div class="custom-control custom-checkbox custom-control-inline">
+                <input type="checkbox" class="custom-control-input" id="sentence-type5" name="sentence-type" value="c" />
+                <label class="custom-control-label" for="sentence-type5">游戏</label>
+              </div>
+              <div class="custom-control custom-checkbox custom-control-inline">
+                <input type="checkbox" class="custom-control-input" id="sentence-type6" name="sentence-type" value="k" />
+                <label class="custom-control-label" for="sentence-type6">哲学</label>
+              </div>
+
+              <div class="custom-control custom-checkbox custom-control-inline">
+                <input type="checkbox" class="custom-control-input" id="sentence-type7" name="sentence-type" value="h" />
+                <label class="custom-control-label" for="sentence-type7">影视</label>
+              </div>
+              <div class="custom-control custom-checkbox custom-control-inline">
+                <input type="checkbox" class="custom-control-input" id="sentence-type8" name="sentence-type" value="b" />
+                <label class="custom-control-label" for="sentence-type8">漫画</label>
+              </div>
+              <div class="custom-control custom-checkbox custom-control-inline">
+                <input type="checkbox" class="custom-control-input" id="sentence-type9" name="sentence-type" value="e" />
+                <label class="custom-control-label" for="sentence-type9">原创</label>
+              </div>
+              <div class="custom-control custom-checkbox custom-control-inline">
+                <input type="checkbox" class="custom-control-input" id="sentence-type10" name="sentence-type" value="f" />
+                <label class="custom-control-label" for="sentence-type10">来自网络</label>
+              </div>
+              <div class="custom-control custom-checkbox custom-control-inline">
+                <input type="checkbox" class="custom-control-input" id="sentence-type11" name="sentence-type" value="l" />
+                <label class="custom-control-label" for="sentence-type11">抖机灵</label>
+              </div>
+              <div class="custom-control custom-checkbox custom-control-inline">
+                <input type="checkbox" class="custom-control-input" id="sentence-type12" name="sentence-type" value="g" />
+                <label class="custom-control-label" for="sentence-type12">其他</label>
+              </div>
+            </div>
+            <div class="from-group p-t-15 text-center">
+              <button type="button" class="btn btn-purple btn-round btn-w-md" id="again"><i class="mdi mdi-reload"></i>再来一句</button>
+            </div>
+            <div class="from-group p-t-15 text-center">
+              <!-- 最长不超过50字 -->
+              <p class="col-12 col-md-6 fs-22 text-left" id="sentence"></p>
+              <p class="col-12 col-md-6 fs-18 text-right">—— <span id="sentence-author"></span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <script src="__JS__/my.jquery.js"></script>
+  <script src="__JS__/common.js"></script>
+  <script type="text/javascript">
+    $.ready(function () {
+
+      //标记位 避免重复点击
+      var flag = false;
+
+      //从cookie获取存储的句子类型 不等于fasle说明 已经存入过
+      if ($.cookie('sentence_type') !== false) {
+        //取出cookie值
+        var temp_str = $.cookie('sentence_type');
+        //如果已经没有存入 照样设置为前6个
+        if(temp_str.length === 0){
+          $.cookie('sentence_type', 'dajick', {exdays: 30});
+          temp_str = 'dajick';
+        }
+        //遍历更新复选框状态
+        for (var i = 1; i < 13; i++) {
+          //从如果在cookie中找到 则勾选对应复选框 否则取消勾选
+            $('#sentence-type' + i).checked = temp_str.indexOf($('#sentence-type' + i).value) !== -1 ? true:false;
+          
+        }
+      }else{
+        //如果用户还没有选择过句子类型 则默认设置为类型前6个
+        for(var i = 1;i < 6;i++){
+          $('#sentence-type' + i).checked = i <= 6 ? true:false;
+        }
+        $.cookie('sentence_type', 'dajick', {exdays: 30});
+      }
+
+      //根据从cookie中取出类型 发送请求获取对应类型句子 打印到对应位置
+      getSentence($.cookie('sentence_type'));
+
+      //遍历绑定复选框的onchange事件
+      for (var i = 1; i < 13; i++) {
+        $('#sentence-type' + i).on('change', function () {
+          var temp = '';
+          //当发生onchange事件时 遍历复选框选择状态 将值存入cookie
+          for (var j = 1; j < 13; j++) {
+            if ($('#sentence-type' + j).checked) temp += $('#sentence-type' + j).value;
+          }
+          //设置cookie 过期时间 30天
+          $.cookie('sentence_type', temp, {exdays: 30});
+        });
+      }
+
+
+      //当再来一句发生点击事件时
+      $('#again').on('click',function(){
+        if(flag) return; //标记位为true直接返回
+        flag = true;
+        //旋转
+        this.getElementsByTagName('i')[0].setAttribute('class','mdi mdi-reload mdi-spin');
+        var types = $.cookie('sentence_type');
+        if(types === false || types.length === 0) types = 'dajick';
+        getSentence(types);
+      });
+
+      //当使用教程发生点击事件时
+      $('#help').on('click', function () {
+        window.parent.$.home.createTab('{:url("admin/Index/help")}', '使用教程');
+      });
+
+      //当随机密码发生点击事件时
+      $('#rand').on('click', function () {
+        window.parent.$.home.createTab('{:url("admin/Password/rand")}', '随机密码');
+      });
+
+      //@param sting types 类型字符串 如"abcd"
+      function getSentence(types) {
+        if (types.length === 0) return;
+        var temp = types.split('');
+        var len = temp.length;
+        var type_str = '';
+        //遍历生成对应格式
+        for (var i = 0; i < len; i++) {
+          type_str += 'c=' + temp[i] + '&';
+        }
+
+        //去除最后一位多余的&
+        type_str = type_str.substr(0, type_str.length - 1);
+
+        $.ajax({
+          url: 'https://v1.hitokoto.cn',
+          type: 'get',
+          dataType: 'json',
+          cache: true,
+          data: type_str + '&charset=utf-8&encode=json&max_length=50',
+          default_headers: false, //关闭默认请求头 否则跨域会多出一个预请求
+          success: function (res, code, xmlhttp) {
+            var author = ' ';
+            //处理返回的作者格式
+            if (res.from === null && res.from_who === null) {
+              author += res.creator;
+            } else {
+              if (res.from_who !== null) author += res.from_who;
+              if (res.from !== null) author += ' ' + '<' + res.from + '>';
+            }
+            $('#sentence-author').innerText = author;
+            $('#sentence').innerText = res.hitokoto;
+            //强制延时1秒
+            var timer = setTimeout(function(){
+            //停止旋转
+             $('#again').getElementsByTagName('i')[0].setAttribute('class','mdi mdi-reload');
+             flag = false;
+             clearTimeout(timer);
+            }, 1000);
+          },
+          error: function (obj, status) {
+            showTopMessage('句子获取失败，刷新页面试试吧', false, 1500);
+          }
+        });
+      }
+
+    });
+  </script>
+</body>
+
+</html>

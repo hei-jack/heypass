@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="renderer" content="webkit" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HeyPass管理系统</title>
+  <!-- 引入ico图标 -->
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="stylesheet" type="text/css" href="__CSS__/materialdesignicons.min.css">
+  <link rel="stylesheet" type="text/css" href="__CSS__/base.css" />
+  <link rel="stylesheet" type="text/css" href="__CSS__/index.css" />
+</head>
+<!-- data-logobg="color_2" data-headerbg="color_2" data-sidebarbg="color_2" -->
+
+<body>
+  <!-- S 容器 -->
+  <div class="heypass-layout-container">
+    <!-- S 侧边栏 -->
+    <aside class="heypass-layout-sidebar">
+      <div class="sidebar-header">
+        <a href="{:url('admin/Index/index')}" target="_self">
+          <img src="__IMG__/logo-sidebar1.png" alt="HeyPass">
+        </a>
+      </div>
+      <div class="heypass-layout-sidebar-info">
+        <nav class="sidebar-main">
+          <ul class="nav-drawer">
+            <li class="nav-item active">
+              <a class="heypass-tabs" href="{:url('admin/Index/main')}">
+                <i class="mdi mdi-home"></i>
+                <span>首页</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="heypass-tabs" href="{:url('admin/Password/index')}">
+                <i class="mdi mdi-key"></i>
+                <span>密码列表</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="heypass-tabs" href="{:url('admin/Diary/index')}">
+                <i class="mdi mdi-format-list-numbered"></i>
+                <span>日记列表</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="heypass-tabs" href="{:url('admin/Memo/index')}">
+                <i class="mdi mdi-clipboard-text"></i>
+                <span>备忘列表</span>
+              </a>
+            </li>
+
+            {//超级管理员才显示的页面}
+            {if session('uid','','admin') === 1}
+            <li class="nav-item">
+              <a class="heypass-tabs" href="{:url('admin/Category/index')}">
+                <i class="mdi mdi-equalizer"></i>
+                <span>密码分类</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="heypass-tabs" href="{:url('admin/User/index')}">
+                <i class="mdi mdi-account-multiple"></i>
+                <span>亲友管理</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="heypass-tabs" href="{:url('admin/Conf/setting')}">
+                <i class="mdi mdi-settings"></i>
+                <span>系统设置</span>
+              </a>
+            </li>
+            {/if}
+
+          </ul>
+        </nav>
+        <div class="sidebar-footer">
+          <p class="copyright user-select" onselectstart="return false;">Copyright © 2021. HeyPass All rights reserved.
+          </p>
+        </div>
+      </div>
+    </aside>
+    <!-- E 侧边栏 -->
+    <!-- S 头部 -->
+    <header class="heypass-layout-header">
+      <nav class="navbar user-select">
+        <!-- S 侧边栏开关按钮 -->
+        <div class="navbar-left">
+          <div class="heypass-aside-toggler">
+            <span class="heypass-toggler-bar"></span>
+            <span class="heypass-toggler-bar"></span>
+            <span class="heypass-toggler-bar"></span>
+          </div>
+        </div>
+        <!-- E 侧边栏开关按钮 -->
+        <ul class="navbar-right">
+
+          <!-- S 消息提醒=备忘 -->
+          <li class="dropdown dropdown-cheat m-r-5">
+            <span data-toggle="dropdown" class="cheat-icon">
+              <i class="mdi mdi-bell-outline"></i>
+              <span class="badge badge-danger cheat-num">10</span>
+            </span>
+          </li>
+          <!-- E 消息提醒=备忘 -->
+
+          <li class="dropdown dropdown-themes">
+            <span class="heypass-themes"><i class="mdi mdi-palette"></i></span>
+            <ul class="dropdown-menu user-select">
+              <li>
+                <p>LOGO</p>
+              </li>
+              <li class="drop-skin-li clearfix">
+                <span class="inverse">
+                  <input type="radio" name="logo_bg" value="default" id="logo_bg_1" checked="">
+                  <label for="logo_bg_1"></label>
+                </span>
+                <span>
+                  <input type="radio" name="logo_bg" value="color_2" id="logo_bg_2">
+                  <label for="logo_bg_2"></label>
+                </span>
+                <span>
+                  <input type="radio" name="logo_bg" value="color_3" id="logo_bg_3">
+                  <label for="logo_bg_3"></label>
+                </span>
+                <span>
+                  <input type="radio" name="logo_bg" value="color_4" id="logo_bg_4">
+                  <label for="logo_bg_4"></label>
+                </span>
+                <span>
+                  <input type="radio" name="logo_bg" value="color_5" id="logo_bg_5">
+                  <label for="logo_bg_5"></label>
+                </span>
+                <span>
+                  <input type="radio" name="logo_bg" value="color_6" id="logo_bg_6">
+                  <label for="logo_bg_6"></label>
+                </span>
+                <span>
+                  <input type="radio" name="logo_bg" value="color_7" id="logo_bg_7">
+                  <label for="logo_bg_7"></label>
+                </span>
+                <span>
+                  <input type="radio" name="logo_bg" value="color_8" id="logo_bg_8">
+                  <label for="logo_bg_8"></label>
+                </span>
+              </li>
+              <li>
+                <p>头部</p>
+              </li>
+              <li class="drop-skin-li clearfix">
+                <span class="inverse">
+                  <input type="radio" name="header_bg" value="default" id="header_bg_1" checked="">
+                  <label for="header_bg_1"></label>
+                </span>
+                <span>
+                  <input type="radio" name="header_bg" value="color_2" id="header_bg_2">
+                  <label for="header_bg_2"></label>
+                </span>
+                <span>
+                  <input type="radio" name="header_bg" value="color_3" id="header_bg_3">
+                  <label for="header_bg_3"></label>
+                </span>
+                <span>
+                  <input type="radio" name="header_bg" value="color_4" id="header_bg_4">
+                  <label for="header_bg_4"></label>
+                </span>
+                <span>
+                  <input type="radio" name="header_bg" value="color_5" id="header_bg_5">
+                  <label for="header_bg_5"></label>
+                </span>
+                <span>
+                  <input type="radio" name="header_bg" value="color_6" id="header_bg_6">
+                  <label for="header_bg_6"></label>
+                </span>
+                <span>
+                  <input type="radio" name="header_bg" value="color_7" id="header_bg_7">
+                  <label for="header_bg_7"></label>
+                </span>
+                <span>
+                  <input type="radio" name="header_bg" value="color_8" id="header_bg_8">
+                  <label for="header_bg_8"></label>
+                </span>
+              </li>
+              <li>
+                <p>侧边栏</p>
+              </li>
+              <li class="drop-skin-li clearfix">
+                <span class="inverse">
+                  <input type="radio" name="sidebar_bg" value="default" id="sidebar_bg_1" checked="">
+                  <label for="sidebar_bg_1"></label>
+                </span>
+                <span>
+                  <input type="radio" name="sidebar_bg" value="color_2" id="sidebar_bg_2">
+                  <label for="sidebar_bg_2"></label>
+                </span>
+                <span>
+                  <input type="radio" name="sidebar_bg" value="color_3" id="sidebar_bg_3">
+                  <label for="sidebar_bg_3"></label>
+                </span>
+                <span>
+                  <input type="radio" name="sidebar_bg" value="color_4" id="sidebar_bg_4">
+                  <label for="sidebar_bg_4"></label>
+                </span>
+                <span>
+                  <input type="radio" name="sidebar_bg" value="color_5" id="sidebar_bg_5">
+                  <label for="sidebar_bg_5"></label>
+                </span>
+                <span>
+                  <input type="radio" name="sidebar_bg" value="color_6" id="sidebar_bg_6">
+                  <label for="sidebar_bg_6"></label>
+                </span>
+                <span>
+                  <input type="radio" name="sidebar_bg" value="color_7" id="sidebar_bg_7">
+                  <label for="sidebar_bg_7"></label>
+                </span>
+                <span>
+                  <input type="radio" name="sidebar_bg" value="color_8" id="sidebar_bg_8">
+                  <label for="sidebar_bg_8"></label>
+                </span>
+              </li>
+            </ul>
+          </li>
+          <li class="dropdown dropdown-user">
+            <a class="user-info" href="javascript:void(0);">
+              <img class="img-avatar" src="__IMG__/avatar2.png" alt="avatar" />
+              <span>{$Think.cookie.heypass_nickname}</span>
+            </a>
+            <ul class="dropdown-menu user-select">
+              <li>
+                <a class="heypass-tabs dropdown-item" href="{:url('admin/Index/myPwd')}">
+                  <i class="mdi mdi-lock-outline"></i> 修改密码
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="{:url('admin/Index/logout')}">
+                  <i class="mdi mdi-logout-variant"></i> 退出登录
+                </a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <!-- E 头部 -->
+    <!-- S 页面主要内容 -->
+    <main class="heypass-layout-main">
+      <div id="iframe-content">
+        <!-- iframe容器 -->
+        <div class="iframe-wrapper">
+          <div class="iframe-navbar user-select">
+            <div class="nav-tools-left">
+              <a href="javascript:void(0);" class="tools-move-left">
+                <i class="mdi mdi-skip-backward"></i>
+              </a>
+            </div>
+            <nav class="nav-tools-panel">
+              <ul class="nav-tabs">
+                <li class="nav-item active">
+                  <a href="javascript:void(0);" data-id="heypass_tabs_main" data-type="main" data-url="{:url('admin/Index/main')}" class="nav-tab-link">首页</a>
+                </li>
+                <!-- <li class="nav-item active">
+                    <a href="javascript:void(0);" data-id="heypass_tabs_1" data-type="info" data-url="info.html" class="nav-tab-link" style="display: inline-block;">首页</a>
+                    <span class="close">x</span>
+                  </li> -->
+              </ul>
+            </nav>
+            <div class="nav-tools-right">
+              <a href="javascript:void(0);" class="tools-move-right">
+                <i class="mdi mdi-skip-forward"></i>
+              </a>
+              <a href="javascript:void(0);" class="tools-dropdown">
+                <i class="mdi mdi-menu"></i>
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu dropdown-tabs user-select" id="dropdown-tab-tools">
+                <li><a class="dropdown-item show-now-tab">显示当前选项卡</a></li>
+                <li><a class="dropdown-item close-all-tab">关闭所有标签页</a></li>
+                <li><a class="dropdown-item close-other-tab">关闭其他标签页</a></li>
+              </ul>
+            </div>
+          </div>
+          <div id="iframe-pages">
+            <!-- 主页 -->
+            <iframe id="heypass_tabs_main" class="tab-item active" width="100%" height="100%" frameborder="0" src="{:url('admin/Index/main')}" seamless="" style="height: 100%;" data-index="0"></iframe>
+            <!-- <iframe id="heypass_tabs_1" class="tab-item active" width="100%" height="100%" frameborder="0"
+                  src="info.html" seamless="" style="height: 100%;" data-index="1"></iframe> -->
+          </div>
+        </div>
+      </div>
+    </main>
+    <!-- E 页面主要内容 -->
+  </div>
+  <!-- E 容器 -->
+  <script src="__JS__/my.jquery.js"></script>
+  <script src="__JS__/home.js"></script>
+  <script type="text/javascript">
+    $.ready(function () {
+      //初始化主页插件
+      $.home.init();
+    });
+  </script>
+</body>
+
+</html>

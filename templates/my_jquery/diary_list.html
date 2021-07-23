@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="renderer" content="webkit" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- 引入ico图标 -->
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+  <title>HeyPass-日记列表</title>
+  <link rel="stylesheet" type="text/css" href="__CSS__/materialdesignicons.min.css">
+  <link rel="stylesheet" type="text/css" href="__CSS__/base.css">
+  <link rel="stylesheet" type="text/css" href="__CSS__/style.css">
+  <link rel="stylesheet" type="text/css" href="__CSS__/diary.css">
+</head>
+
+<body>
+  <!-- 日记列表 -->
+  <div class="container-fluid p-tb-15">
+
+    <div class="row">
+      <div class="col-12 col-lg-6 m-lr-auto">
+        <!-- 日记容器 -->
+        <div class="diary-container user-select">
+
+          <!-- 头部 -->
+          <div class="diary-header p-15">
+            <!-- 上一月 -->
+            <div class="diary-prev toolbar-item">
+              <i class="mdi mdi-less-than mdi-48px"></i>
+            </div>
+            <!-- 今天 -->
+            <div class="diary-center toolbar-item">
+              <!-- 当前日期和时间 -->
+              <div class="diary-today">
+                <span id="nowtime">加载中...</span>
+                <span id="today">加载中...</span>
+              </div>
+              <div class="diary-year-month">
+                <!-- 年份 -->
+                <div class="diary-year toolbar-item">
+                  <span id="year" class="diary-btn"></span>
+                </div>
+                <!-- 月份 -->
+                <div class="diary-month toolbar-item">
+                  <span id="month" class="diary-btn"></span>
+                </div>
+              </div>
+            </div>
+
+
+            <!-- 下一月 -->
+            <div class="diary-next toolbar-item">
+              <i class="mdi mdi-greater-than mdi-48px"></i>
+            </div>
+          </div>
+
+          <div class="diary-main p-15">
+            <!-- 周几 -->
+            <div class="diary-row diary-weeks">
+              <input type="hidden" class="hidden" id="token" name="token" value="{$Request.token}" />
+              <input type="hidden" class="hidden" name="sign" value="{$Think.config.rsa_public_key}" />
+              <div class="diary-cell">
+                <span>一</span>
+              </div>
+              <div class="diary-cell">
+                <span>二</span>
+              </div>
+              <div class="diary-cell">
+                <span>三</span>
+              </div>
+              <div class="diary-cell">
+                <span>四</span>
+              </div>
+              <div class="diary-cell">
+                <span>五</span>
+              </div>
+              <div class="diary-cell">
+                <span>六</span>
+              </div>
+              <div class="diary-cell">
+                <span>日</span>
+              </div>
+            </div>
+            <!-- 选择年份 -->
+            <div class="diary-select-years">
+
+              <div class="diaray-row">
+                <div class="diary-cell">
+                  <span id="prev-years">&lt;&lt;</span>
+                </div>
+                <div class="diary-cell">
+                  <span class="years-item"></span>
+                </div>
+                <div class="diary-cell">
+                  <span class="years-item"></span>
+                </div>
+                <div class="diary-cell">
+                  <span class="years-item"></span>
+                </div>
+              </div>
+
+              <div class="diaray-row">
+                <div class="diary-cell">
+                  <span class="years-item"></span>
+                </div>
+                <div class="diary-cell">
+                  <span class="years-item"></span>
+                </div>
+                <div class="diary-cell">
+                  <span class="years-item"></span>
+                </div>
+                <div class="diary-cell">
+                  <span class="years-item"></span>
+                </div>
+              </div>
+
+              <div class="diaray-row">
+                <div class="diary-cell">
+                  <span class="years-item"></span>
+                </div>
+                <div class="diary-cell">
+                  <span class="years-item"></span>
+                </div>
+                <div class="diary-cell">
+                  <span class="years-item"></span>
+                </div>
+                <div class="diary-cell">
+                  <span id="next-years">&gt;&gt;</span>
+                </div>
+              </div>
+            </div>
+            <!-- 选择月份 -->
+            <div class="diary-select-months">
+              <div class="diaray-row">
+                <div class="diary-cell">
+                  <span class="months-item">1月</span>
+                </div>
+                <div class="diary-cell">
+                  <span class="months-item">2月</span>
+                </div>
+                <div class="diary-cell">
+                  <span class="months-item">3月</span>
+                </div>
+                <div class="diary-cell">
+                  <span class="months-item">4月</span>
+                </div>
+              </div>
+
+              <div class="diaray-row">
+                <div class="diary-cell">
+                  <span class="months-item">5月</span>
+                </div>
+                <div class="diary-cell">
+                  <span class="months-item">6月</span>
+                </div>
+                <div class="diary-cell">
+                  <span class="months-item">7月</span>
+                </div>
+                <div class="diary-cell">
+                  <span class="months-item">8月</span>
+                </div>
+              </div>
+
+              <div class="diaray-row">
+                <div class="diary-cell">
+                  <span class="months-item">9月</span>
+                </div>
+                <div class="diary-cell">
+                  <span class="months-item">10月</span>
+                </div>
+                <div class="diary-cell">
+                  <span class="months-item">11月</span>
+                </div>
+                <div class="diary-cell">
+                  <span class="months-item">12月</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 载入界面 -->
+            <div class="diary-loading diary-show">
+              <div class="diary-gif-container">
+                <img src="__IMG__/loading2.gif" alt="载入动画">
+              </div>
+              <span class="diary-loading-text">正在载入中，请稍候....</span>
+            </div>
+
+            <!-- 真日历 天数 -->
+            <div class="diary-days">
+
+              <!-- 天数优选级 active（当前天数最大）> tag（标记）> success（日记） -->
+
+              <div class="diary-row">
+                <div class="diary-cell">
+                  <span></span>
+                </div>
+                <div class="diary-cell">
+                  <span></span>
+                </div>
+                <div class="diary-cell">
+                  <span></span>
+                </div>
+                <div class="diary-cell">
+                  <span></span>
+                </div>
+                <div class="diary-cell">
+                  <span></span>
+                </div>
+                <div class="diary-cell">
+                  <span></span>
+                </div>
+                <div class="diary-cell">
+                  <span></span>
+                </div>
+              </div>
+
+              <div class="diary-row">
+                <div class="diary-cell">
+                  <span></span>
+                </div>
+                <div class="diary-cell">
+                  <span></span>
+                </div>
+                <div class="diary-cell">
+                  <span></span>
+                </div>
+                <div class="diary-cell">
+                  <span></span>
+                </div>
+                <div class="diary-cell">
+                  <span></span>
+                </div>
+                <div class="diary-cell">
+                  <span></span>
+                </div>
+                <div class="diary-cell">
+                  <span></span>
+                </div>
+              </div>
+
+              <div class="diary-row">
+                <div class="diary-cell">
+                  <span></span>
+                </div>
+                <div class="diary-cell">
+                  <span></span>
+                </div>
+                <div class="diary-cell">
+                  <span></span>
+                </div>
+                <div class="diary-cell">
+                  <span></span>
+                </div>
+                <div class="diary-cell">
+                  <span></span>
+                </div>
+                <div class="diary-cell">
+                  <span></span>
+                </div>
+                <div class="diary-cell">
+                  <span></span>
+                </div>
+              </div>
+
+              <div class="diary-row">
+                <div class="diary-cell">
+                  <span></span>
+                </div>
+                <div class="diary-cell">
+                  <span></span>
+                </div>
+                <div class="diary-cell">
+                  <span></span>
+                </div>
+                <div class="diary-cell">
+                  <span></span>
+                </div>
+                <div class="diary-cell">
+                  <span></span>
+                </div>
+                <div class="diary-cell">
+                  <span></span>
+                </div>
+                <div class="diary-cell">
+                  <span></span>
+                </div>
+              </div>
+
+              <div class="diary-row">
+                <div class="diary-cell">
+                  <span></span>
+                </div>
+                <div class="diary-cell">
+                  <span></span>
+                </div>
+                <div class="diary-cell">
+                  <span></span>
+                </div>
+                <div class="diary-cell">
+                  <span></span>
+                </div>
+                <div class="diary-cell">
+                  <span></span>
+                </div>
+                <div class="diary-cell">
+                  <span></span>
+                </div>
+                <div class="diary-cell">
+                  <span></span>
+                </div>
+              </div>
+
+              <div class="diary-row">
+                <div class="diary-cell">
+                  <span></span>
+                </div>
+                <div class="diary-cell">
+                  <span></span>
+                </div>
+                <div class="diary-cell">
+                  <span></span>
+                </div>
+                <div class="diary-cell">
+                  <span></span>
+                </div>
+                <div class="diary-cell">
+                  <span></span>
+                </div>
+                <div class="diary-cell">
+                  <span></span>
+                </div>
+                <div class="diary-cell">
+                  <span></span>
+                </div>
+              </div>
+
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- 弹窗时同步添加body style="overflow: hidden;" 否则移动端会穿透还能滚动 -->
+  <!-- 弹窗 -->
+  <div class="hey-dialog" style="display: none;">
+    <!-- 遮罩层 -->
+    <div class="hey-dialog-bg"></div>
+    <div class="col-md-4 col-10 hey-dialog-box p-tb-15">
+      <!-- 弹窗标题 -->
+      <div class="hey-dialog-title user-select">选择操作 <span class="hey-dialog-close">x</span></div>
+      <!-- 弹窗内容 -->
+      <div class="hey-dialog-content">
+        <div class="form-group text-center">
+          <button type="button" class="btn btn-warning btn-round btn-w-md" id="tag-btn"><span
+              class="mdi mdi-circle">标记</span></button>
+        </div>
+        <div class="form-group text-center">
+          <button type="button" class="btn btn-success btn-round btn-w-md" id="go-btn"><span
+              class="mdi mdi-plus">新增</span></button>
+        </div>
+        <div class="form-group text-center">
+          <button type="button" class="btn btn-danger btn-round btn-w-md" id="del-btn"><span
+              class="mdi mdi-delete">删除</span></button>
+        </div>
+        <div class="form-group text-center">
+          <button type="button" class="btn btn-dark btn-round btn-w-md" id="view-btn" data-tag="0" data-id="0"
+            data-diray="0"><span class="mdi mdi-eye">查看</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="__JS__/my.jquery.js"></script>
+  <script src="__JS__/jsencrypt/jsencrypt.min.js"></script>
+  <script src="__JS__/diary.js"></script>
+  <script src="__JS__/common.js"></script>
+  <script type="text/javascript">
+    $.ready(function () {
+      //初始化日历插件
+      var diary = $.diary({
+        wait: 1500, //强制用户必须等待的最小时长 单位毫秒 默认1500毫秒 避免用户发送过多请求
+        url: getPathName(), //url
+        method: 'POST',
+        ajaxOptions: ajaxOptions,
+        dataType: 'json',
+        queryParams: function (params) {
+          var temp = {
+            year: params.year, // 年份
+            month: params.month, // 月份
+          };
+          return temp;
+        },
+        //载入成功事件
+        onLoadSuccess: function () {
+          //刷新token
+          refreshToken();
+          showTopMessage('获取日记数据成功~', true, 1500);
+        },
+        //载入失败事件
+        onLoadError: function () {
+          //刷新token
+          refreshToken();
+          showTopMessage('获取日记数据失败咯~', false, 1500);
+        }
+      });
+
+      //绑定弹窗标记按钮事件
+      $('#tag-btn').on('click', function () {
+        //获取当前按钮模式 1取消 0标记
+        var mode = Number(this.getAttribute('data-mode'));
+        mode === 1 ? delTag() : addTag();
+      });
+
+      //日记按钮
+      $('#go-btn').on('click', function () {
+        //获取当前按钮模式 1编辑 0添加
+        var mode = Number(this.getAttribute('data-mode'));
+        mode === 1 ? editDiary() : addDiary();
+      });
+
+      //删除按钮（只删除日记）
+      $('#del-btn').on('click', function () {
+        //获取当前日记按钮模式
+        var mode = Number($('#go-btn').getAttribute('data-mode'));
+        //还没有添加直接返回
+        if (mode === 0){
+          showTopMessage('本来无一物，何处惹尘埃~',false,1500);
+          return;
+        }
+        delDiary();
+      });
+
+      //查看按钮
+      $('#view-btn').on('click',function(){
+        //获取当前日记按钮模式
+        var mode = Number($('#go-btn').getAttribute('data-mode'));
+        //还没有添加直接返回
+        if (mode === 0){
+          showTopMessage('菩提本无树，明镜亦非台~',false,1500);
+          return;
+        }
+        viewDiary();
+      });
+
+      //取消标记函数
+      function delTag() {
+        //隐藏弹窗
+        diary.hideDialog();
+        //展示加载动画
+        diary.showLoading();
+        
+        $.cookie('heypass_token', dataHelper('HeyPass' + Math.random()));
+        
+        $.ajax({
+          url: '{:url("admin/Diary/delTag")}',
+          type: 'post',
+          dataType: 'json',
+          data: {
+            'id': $('#view-btn').getAttribute('data-id'),
+            'date': $('#view-btn').getAttribute('data-date'),
+          },
+          headers: {
+            'Access-token': dataHelper($('[name="token"]').value),
+            'Access-token2': dataHelper(window.location.host),
+          },
+          success: function (res, code, xmlhttp) {
+             //刷新token
+             refreshToken();
+            if (res.status === 200) {
+              showTopMessage('取消成功，看看还剩下些什么吧~', true, 1500);
+              //延时500秒再重新获取数据
+              var timer = setTimeout(function(){
+                diary.getData(Number($('#year').innerText),Number($('#month').innerText));
+                clearTimeout(timer);
+              }, 500);
+              
+              return;
+            }
+
+            //请求失败
+            showTopMessage(res.mess + ',' + res.data, false, 1500);
+            diary.setActiveClass('.diary-days');
+          },
+          error: function (obj, status) {
+            //刷新token
+            refreshToken();
+            showTopMessage('取消失败，请检查网络情况或稍后再试', false, 1500);
+            diary.setActiveClass('.diary-days');
+          }
+        });
+      }
+
+      //添加标记函数
+      function addTag() {
+        console.log('添加标记');
+        //隐藏弹窗
+        diary.hideDialog();
+        //展示加载动画
+        diary.showLoading();
+
+        $.cookie('heypass_token', dataHelper('HeyPass' + Math.random()));
+
+        //ajax发送请求
+        $.ajax({
+          url: '{:url("admin/Diary/addTag")}',
+          type: 'post',
+          dataType: 'json',
+          data: {
+            'id': $('#view-btn').getAttribute('data-id'),
+            'date': $('#view-btn').getAttribute('data-date'),
+          },
+          headers: {
+            'Access-token': dataHelper($('[name="token"]').value),
+            'Access-token2': dataHelper(window.location.host),
+          },
+          success: function (res, code, xmlhttp) {
+             //刷新token
+             refreshToken();
+            if (res.status === 200) {
+              showTopMessage('标记成功，又是一个值得留意的日子~', true, 1500);
+              //延时500秒再重新获取数据
+              var timer = setTimeout(function(){
+                diary.getData(Number($('#year').innerText),Number($('#month').innerText));
+                clearTimeout(timer);
+              }, 500);
+              
+              return;
+            }
+
+            //请求失败
+            showTopMessage(res.mess + ',' + res.data, false, 1500);
+            diary.setActiveClass('.diary-days');
+          },
+          error: function (obj, status) {
+            //刷新token
+            refreshToken();
+            showTopMessage('标记失败，请检查网络情况或稍后再试', false, 1500);
+            diary.setActiveClass('.diary-days');
+          }
+        });
+      }
+
+      //添加日记函数
+      function addDiary() {
+        console.log('添加日记');
+        //隐藏弹窗
+        diary.hideDialog();
+        //打开新标签页（跳转添加界面）
+        window.parent.$.home.createTab('{:url("admin/Diary/add")}?date=' + $('#view-btn').getAttribute('data-date'),'添加日记');
+      }
+
+      //编辑日记
+      function editDiary() {
+        console.log('编辑日记');
+        //隐藏弹窗
+        diary.hideDialog();
+         //打开新标签页（跳转查看界面）
+         window.parent.$.home.createTab('{:url("admin/Diary/edit")}?id=' + $('#view-btn').getAttribute('data-id'),'编辑日记');
+      }
+
+      //删除日记
+      function delDiary() {
+        console.log('删除日记');
+
+        //弹窗询问是否要删除
+        var good = confirm("您正在进行删除日志操作，请问是否要继续？");
+        if (good !== true) return false;
+        
+        //隐藏弹窗
+        diary.hideDialog();
+        //展示加载动画
+        diary.showLoading();
+
+        $.cookie('heypass_token', dataHelper('HeyPass' + Math.random()));
+
+        //ajax发送请求
+        $.ajax({
+          url: '{:url("admin/Diary/del")}',
+          type: 'post',
+          dataType: 'json',
+          data: {
+            'id': $('#view-btn').getAttribute('data-id'),
+          },
+          headers: {
+            'Access-token': dataHelper($('[name="token"]').value),
+            'Access-token2': dataHelper(window.location.host), //伪装 发送域名
+          },
+          success: function (res, code, xmlhttp) {
+             //刷新token
+             refreshToken();
+            if (res.status === 200) {
+              showTopMessage('删除成功，日记已经飘走了~', true, 1500);
+              //延时500秒再重新获取数据
+              var timer = setTimeout(function(){
+                diary.getData(Number($('#year').innerText),Number($('#month').innerText));
+                clearTimeout(timer);
+              }, 500);
+              
+              return;
+            }
+
+            //请求失败
+            showTopMessage(res.mess + ',' + res.data, false, 1500);
+            diary.setActiveClass('.diary-days');
+          },
+          error: function (obj, status) {
+            //刷新token
+            refreshToken();
+            showTopMessage('删除失败，请检查网络情况或稍后再试', false, 1500);
+            diary.setActiveClass('.diary-days');
+          }
+        });
+      }
+
+      //查看日记
+      function viewDiary(){
+        //隐藏弹窗
+        diary.hideDialog();
+        //打开新标签页（跳转查看界面）
+        window.parent.$.home.createTab('{:url("admin/Diary/diary")}?id=' + $('#view-btn').getAttribute('data-id'),'查看日记');
+      }
+
+      //ajax请求头
+      function ajaxOptions() {
+        var token = $('[name="token"]').value;
+        var params = {
+          'Access-token': dataHelper(token),
+          'Access-token2': dataHelper(window.location.host),
+        };
+        return params;
+      }
+    });
+  </script>
+</body>
+
+</html>

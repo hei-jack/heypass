@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="renderer" content="webkit" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- 引入ico图标 -->
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+  <title>HeyPass-随机密码</title>
+  <link rel="stylesheet" type="text/css" href="__CSS__/materialdesignicons.min.css">
+  <link rel="stylesheet" type="text/css" href="__CSS__/base.css">
+  <link rel="stylesheet" type="text/css" href="__CSS__/style.css">
+  <style>
+    /*复选框样式*/
+    .custom-checkbox .custom-control-input:checked~.custom-control-label::after {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3e%3cpath fill='%23fff' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26l2.974 2.99L8 2.193z'/%3e%3c/svg%3e");
+    }
+
+    .custom-checkbox .custom-control-label::before {
+      border-radius: 2px;
+    }
+
+    .custom-checkbox .custom-control-input:indeterminate~.custom-control-label::before {
+      border-color: #33cabb;
+      background-color: #33cabb;
+    }
+
+    .custom-checkbox .custom-control-input:disabled:checked~.custom-control-label::before {
+      background-color: rgba(51, 202, 187, 0.25);
+    }
+
+    .custom-checkbox .custom-control-input:disabled:indeterminate~.custom-control-label::before {
+      background-color: rgba(51, 202, 187, 0.25);
+    }
+
+    .custom-checkbox.custom-secondary .custom-control-input:indeterminate~.custom-control-label::before {
+      border-color: #e4e7ea;
+      background-color: #e4e7ea;
+    }
+
+    [type='button'] {
+      line-height: 24px;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 随机密码 -->
+  <div class="container-fluid p-t-15">
+
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card">
+          <header class="card-header">
+            <div class="card-title">随机生成密码</div>
+          </header>
+          <div class="card-body">
+
+            <div class="form-group col-md-12">
+              <label>选项</label>
+              <div class="form-group">
+                <div class="custom-control custom-checkbox custom-control-inline">
+                  <input type="checkbox" class="custom-control-input" id="letters_upper" name="rand" checked="true" />
+                  <label class="custom-control-label" for="letters_upper">A-Z</label>
+                </div>
+                <div class="custom-control custom-checkbox custom-control-inline">
+                  <input type="checkbox" class="custom-control-input" id="letters_lower" name="rand" checked="true" />
+                  <label class="custom-control-label" for="letters_lower">a-z</label>
+                </div>
+                <div class="custom-control custom-checkbox custom-control-inline">
+                  <input type="checkbox" class="custom-control-input" id="numbers" name="rand" checked="true" />
+                  <label class="custom-control-label" for="numbers">0-9</label>
+                </div>
+                <div class="custom-control custom-checkbox custom-control-inline">
+                  <input type="checkbox" class="custom-control-input" id="symbol" name="rand" />
+                  <label class="custom-control-label" for="symbol">符号</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group col-md-12">
+              <label for="len">长度</label>
+              <input type="text" class="form-control" id="len" name="len" value="16" placeholder="请输入想要生成的密码长度" />
+            </div>
+
+            <div class="form-group col-md-12">
+              <label for="username">生成结果</label>
+              <input type="text" class="form-control" id="password" name="password" value="" placeholder="点击随机按钮生成"
+                readonly="readonly" />
+              <small class="code">本页面生成的密码不会被存储和记录，不相信的可以断网后运行，请妥善保管随机生成的密码。本页面建议在chrome浏览器运行。</small>
+            </div>
+
+            <div class="form-group col-md-12 text-center">
+              <button id="copy" type="button" class="btn btn-success btn-round btn-w-md m-r-5"
+                data-clipboard-target="#password">
+                <i class="mdi mdi-content-copy mdi-24px"></i>复制
+              </button>
+              <button id="rand" type="button" class="btn btn-success btn-round btn-w-md">
+                <i class="mdi mdi-spin mdi-judaism mdi-24px"></i>随机
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="__JS__/my.jquery.js"></script>
+  <!-- clipboard插件 -->
+  <script src="__JS__/clipboard.js/clipboard.min.js"></script>
+  <script src="__JS__/common.js"></script>
+  <script type="text/javascript">
+    $.ready(function () {
+
+      //当getrandpass按钮发生点击事件时
+      $('#rand').on('click', function () {
+        //大小写字母、数字、特殊符号
+        var letters_upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        var letters_lower = "abcdefghijklmnopqrstuvwxyz";
+        var numbers = "0123456789";
+        var symbol = "!@#$%^&*()_+~`|}{[]\:;?><,./-=";
+        //复选框
+        var letters_upper_check = $("#letters_upper").checked;
+        var letters_lower_check = $("#letters_lower").checked;
+        var numbers_check = $("#numbers").checked;
+        var symbol_check = $("#symbol").checked;
+        //输入框
+        var len = Number($("#len").value); //长度
+        var password = $("#password"); //回显框
+        if (len < 1 || isNaN(len)) {
+          len = 16;
+          $("#len").value = "16";
+        }
+        if (!letters_upper_check && !letters_lower_check && !numbers_check && !symbol_check) {
+          //帮用户选择
+          letters_upper_check = true;
+          $("#letters_upper").checked;
+          letters_lower_check = true;
+          $("#letters_lower").checked;
+          numbers_check = true;
+          $("#numbers").checked;
+        }
+        var str = '';
+        var result = '';
+        if (letters_upper_check) str += letters_upper;
+        if (letters_lower_check) str += letters_lower;
+        if (numbers_check) str += numbers;
+        if (symbol_check) str += symbol;
+        var strlen = str.length;
+        //生成密码
+        for (var i = 0; i < len; i++) {
+          result += str.charAt(rand(0,str.length));
+        }
+        password.value = result;
+      });
+
+      //当复制按钮发生点击事件时
+      $('#copy').on('click', function () {
+        if ($('#password').value.length === 0) {
+          showTopMessage('复制到剪贴板失败，请先随机密码', false, 1500);
+          return false;
+        }
+        //复制插件
+        var copy = new ClipboardJS('#copy');
+        //复制成功时
+        copy.on('success', function (e) {
+          copy.destroy(); //销毁实例
+          showTopMessage('复制到剪贴板成功，快去试试粘贴吧~', true, 1500);
+        });
+        //复制失败时
+        copy.on('error', function (e) {
+          copy.destroy(); //销毁实例
+          showTopMessage('复制到剪贴板失败，自己动手试试呗~', true, 1500);
+        });
+
+        
+
+      });
+
+      /*
+       * 获取随机数
+       * @param number min 最小值
+       * @param number max 最大值
+       * @return number 返回最小值（包含）-最大值（不包含）之间的随机数
+       */
+      function rand(min, max) {
+         
+          var range = max - min;
+          if (range <= 0) throw new Error('max must be greater than min!');
+          var hasStrongCrypto = 'crypto' in window && window['crypto'] !== null;
+
+          //如果不支持crypto 则直接使用Math.random
+          if (!hasStrongCrypto) return Math.floor(Math.random() * (max - min) ) + min;
+
+          var requestBytes = Math.ceil(Math.log2(range) / 8);
+          //不需要随机
+          if (!requestBytes) return min;
+ 
+          var maxNum = Math.pow(256, requestBytes);
+          var ar = new Uint8Array(requestBytes);
+
+          while (true) {
+            window.crypto.getRandomValues(ar);
+
+            var val = 0;
+            for (var i = 0; i < requestBytes; i++) {
+              val = (val << 8) + ar[i];
+            }
+
+            if (val < maxNum - maxNum % range) {
+              return min + (val % range);
+            }
+          }
+        }
+    });
+  </script>
+</body>
+
+</html>
