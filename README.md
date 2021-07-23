@@ -15,7 +15,7 @@ HeyPass一款基于 bip39 标准和thinkphp5.1框架的个人隐私管理系统�
 
 感谢**infinityfree**开放的免费虚拟主机服务。
 
-**后台**：[https://heypass.infinityfreeapp.com/public/admin/login.html](https://heypass.infinityfreeapp.com/admin/login.html)
+**后台**：[https://heypass.infinityfreeapp.com/public/admin/login.html](https://heypass.infinityfreeapp.com/public/admin/login.html)
 
 **演示账号**: `admin00001`
 
