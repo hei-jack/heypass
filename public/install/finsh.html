@@ -104,19 +104,16 @@
             'finsh': 'finsh'
           },
           success: function (res, code, xmlhttp) {
-            //如果返回的不是合法数据 就弹窗警告
-            if (res.status !== 200) {
-              showTopMessage(res.mess,false,1500);
-              return false;
-            }
-            showTopMessage(res.mess,true,1500);
             setTimeout(function(){
               //跳转到后台地址
             window.location.href = window.location.href.replace('/install/finsh.html', $('#admin').getAttribute('href'));
-            }, 1500);
+            }, 500);
           },
           error: function (obj, status) {
-            showTopMessage('请检查网络或者稍后重试！',false,1500);
+            setTimeout(function(){
+              //跳转到后台地址
+            window.location.href = window.location.href.replace('/install/finsh.html', $('#admin').getAttribute('href'));
+            }, 500);
           }
         });
       });

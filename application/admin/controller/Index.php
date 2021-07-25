@@ -187,7 +187,7 @@ class Index extends AdminBase{
 		}
 	}
 
-	//设置安全密码 专供除管理员之外的亲友使用
+	//设置安全密码
 	public function setTwoAuth(){
 		$enc = new \app\common\model\UserEnc();
 		$res = $enc->getEnc(session('uid', '', 'admin'));
