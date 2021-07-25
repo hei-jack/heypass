@@ -1,13 +1,13 @@
 <?php
-//用户逻辑层模型
+//命名空间 逻辑层
 namespace app\admin\logic;
 //Bip39
 use \FurqanSiddiqui\BIP39\BIP39;
 //语言包
 use \FurqanSiddiqui\BIP39\WordList;
 
-class User
-{
+//不需要继承公共模型
+class User{
 
   //检查登录的相关信息 方便拦截无效请求
   /*
@@ -41,6 +41,9 @@ class User
       $remaining = substr($remaining,0,strpos($remaining,'?'));
     }
 
+    //去除可能存在的.html后缀防止验证失败
+    $remaining = str_replace('.html','',$remaining);
+    $url = str_replace('.html','',$url);
     // var_dump($remaining);
     // var_dump($url);
 
@@ -129,7 +132,9 @@ class User
     if (!$getPrivateKey)  return null;  //返回null 同下面保持一致
 
     
-    // 解密数据 私钥解密 $end是用来存储解密结果的变量
+    // 解密数据 私钥解密 $end是用来存储解密结果的变量 base64_decode解码之后才能去解密 我也不知道为什么
+    // openssl_private_decrypt(base64_decode($data),$end, $privateKey);  //解密账号
+    // var_dump(!openssl_private_decrypt(base64_decode($data),$end, $privateKey));
     if (!openssl_private_decrypt(base64_decode($data), $end, $privateKey))  return null;
     // var_dump($end);
     return $end;  //返回解密结果
