@@ -97,10 +97,10 @@ class Helper{
     $sql = file_get_contents('./HeyPass.sql');
     //是否修改前缀
     if ($data['prefix'] !== 'y_') $sql = str_replace('`y_', '`' . $data['prefix'], $sql);
-    //打散为数组
-    $sql_arr = explode(';', $sql);
+    //打散为数组 限定返回数组长度 避免分隔最后一句sql语句（最后的sql语句包含多个分号;）
+    $sql_arr = explode(';', $sql,15);
     //去除最后的空数组
-    array_pop($sql_arr);
+    // array_pop($sql_arr);
     //遍历执行sql
     foreach ($sql_arr as $val) {
         $mysqli->query($val);
