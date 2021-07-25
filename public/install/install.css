@@ -1,0 +1,210 @@
+ /* 背景图 */
+ body{
+  background: url('./install-bg.png') no-repeat center 0px;
+  background-size: cover;
+  background-position: center 0;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  -webkit-background-size: cover;
+  -o-background-size: cover;
+  -moz-background-size: cover;
+  -ms-background-size: cover;
+  }
+
+  /* 水平垂直居中 */
+  .col-center{
+  margin: 0 auto;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  /* 兼容IE9及以上浏览器 */
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  }
+
+  .card-header div.card-title {
+  font-size: 20px;
+  }
+  /* 步骤进度条 */
+  .nav {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  padding-left: 0;
+  margin-bottom: 1rem;
+  }
+  .nav-step .nav-item {
+  position: relative;
+  float: left;
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  flex-direction: column;
+  -webkit-box-flex: 1;
+  -webkit-box-align: center;
+  align-items: center;
+  flex: 1 1;
+  padding: 0 12px;
+  font-size: 0;
+  width: 25%;
+  height: 68px;
+  }
+
+  .nav-item span{
+  width: 100%;
+  display: block;
+  font-size: 14px;
+  }
+
+  .nav-step .nav-link {
+  display: -webkit-inline-box;
+  display: inline-flex;
+  margin: 10px 0;
+  width: 29px;
+  height: 29px;
+  max-height: 29px;
+  border-radius: 50%;
+  color: #33cabb;
+  background-color: #f7fafc;
+  -webkit-transition: .3s linear;
+  transition: .3s linear;
+  z-index: 1;
+  }
+
+  .nav-step .nav-item.complete .nav-link, .nav-step .nav-item.complete .nav-link::before, .nav-step .nav-item
+  .nav-link.active, .nav-step .nav-item .nav-link.active::before {
+  background-color: #dcfcfa;
+  }
+
+
+
+  .nav-step .nav-item.complete .nav-link::after, .nav-step .nav-item .nav-link.active::after {
+  background-color: #33cabb;
+  width: 24px;
+  height: 24px;
+  -webkit-transform: translateX(0);
+  transform: translateX(0);
+  color: #fff;
+  }
+
+  .nav-step .nav-item.complete .nav-link::after {
+  width: 29px;
+  height: 29px;
+  -webkit-transform: translateX(0);
+  transform: translateX(0);
+  color: #fff;
+  }
+
+  .nav-step .nav-item .nav-link.active::after {
+  width: 13px;
+  height: 13px;
+  margin-top: 8px;
+  -webkit-transform: translateX(8px);
+  transform: translateX(8px);
+  color: transparent;
+  }
+
+  .nav-step .nav-link::before {
+  content: '';
+  position: absolute;
+  left: calc(-50% + 14.5px);
+  right: calc(50% + 14.5px); 
+  height: 10px;
+  margin-top: 9.5px;
+  background-color: #eceef0;
+  cursor: default;
+  -webkit-transition: .5s;
+  transition: .5s;
+  }
+
+  .nav-step .nav-link::after {
+  content: "\f12c";
+  font-family: "Material Design Icons";
+  width: 0;
+  height: 0;
+  text-align: center;
+  font-size: 15px;
+  position: absolute;
+  border-radius: 50%;
+  background-color: transparent;
+  color: transparent;
+  -webkit-transform: translate(14.5px, 14.5px);
+  -ms-transform: translate(14.5px, 14.5px);
+  transform: translate(14.5px, 14.5px);
+  -webkit-transition: .5s;
+  transition: .5s;
+  z-index: 1;
+  display: -webkit-inline-box;
+  display: inline-flex;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  justify-content: center;
+  }
+
+  .nav-step .nav-item:first-child a::before {
+  display: none;
+  }
+
+  .support{
+    position: relative;
+    float: right;
+    /* display: inline-block; */
+    /* margin-right: 20px; */
+    vertical-align: text-bottom;
+    width: 20px;
+    height: 20px;
+    background-color: transparent;
+    border-radius: 50%;
+    cursor: default;
+    pointer-events: none;
+  }
+
+  [data-flag='1']{
+    background-color: #00fc71;
+  }
+  
+  [data-flag='0']{
+    background-color: #fa4949;
+  }
+
+  .support::after{
+  content: "";
+  font-family: "Material Design Icons";
+  width: 20px;
+  height: 20px;
+  text-align: center;
+  font-size: 15px;
+  position: absolute;
+  left: 0;
+  border-radius: 50%;
+  background-color: transparent;
+  color: #fff;
+  -webkit-transition: .5s;
+  transition: .5s;
+  z-index: 1;
+  display: -webkit-inline-box;
+  display: inline-flex;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  justify-content: center;
+  }
+
+  [data-flag='1']::after{
+  content: "\f12c";
+  }
+
+  [data-flag='0']::after{
+    content: "\f156";
+  }
+
+  .form-flag{
+    top: -29px;
+    right: 9px;
+  }
