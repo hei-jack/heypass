@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="renderer" content="webkit" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- 引入ico图标 -->
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+    <title>HeyPass-安装向导</title>
+    <link rel="stylesheet" type="text/css" href="../static/my_jquery/css/materialdesignicons.min.css">
+    <link rel="stylesheet" type="text/css" href="../static/my_jquery/css/base.css">
+    <link rel="stylesheet" type="text/css" href="../static/my_jquery/css/style.css">
+    <link rel="stylesheet" type="text/css" href="./install.css">
+    <!--[if IE 9]>
+      <style>
+        /* 兼容ie9 */
+        .nav-step .nav-link{
+         display: inline-block;
+        }
+        .nav-step .nav-link::after{
+          line-height: 29px;
+        }
+        .support::after{
+          line-height: 20px;
+        }
+      </style>
+       <![endif]-->
+  </head>
+  <body>
+    <!-- 密码列表 -->
+    <div class="container-fluid p-t-15">
+
+      <div class="row">
+        <div class="col-lg-4 col-center">
+          <div class="card">
+            <header class="card-header">
+              <div class="card-title">HeyPass-安装向导</div>
+            </header>
+            <div class="card-body">
+
+              <!-- 步骤向导 -->
+              <ul class="nav nav-step text-center">
+                <li class="nav-item complete">
+                  <span>环境检测</span>
+                  <a class="nav-link active" data-toggle="tab" href="javascript:void(0);"></a>
+                </li>
+
+                <li class="nav-item">
+                  <span>主题设置</span>
+                  <a class="nav-link" data-toggle="tab" href="/install/step2.html"></a>
+                </li>
+
+                <li class="nav-item">
+                  <span>数据库设置</span>
+                  <a class="nav-link" data-toggle="tab" href="/install/step3.html"></a>
+                </li>
+
+                <li class="nav-item">
+                  <span>安装完成</span>
+                  <a class="nav-link" data-toggle="tab" href="/install/finsh.html"></a>
+                </li>
+              </ul>
+
+              <!-- 步骤内容 -->
+              <div class="server-info clear">
+                <p class="fs-16 lh-18">操作系统：<span></span><a class="support" data-info="system" href="javascript(0);"></a></p>
+                <p class="fs-16 lh-18">PHP版本：<span></span><a class="support" data-info="php_vesion"  href="javascript(0);"></a></p>
+                <p class="fs-16 lh-18">mysqli拓展：<span></span><a class="support" data-info="mysqli"  href="javascript(0);"></a></p>
+                <p class="fs-16 lh-18">openssl拓展：<span></span><a class="support" data-info="openssl"  href="javascript(0);"></a></p>
+                <p class="fs-16 lh-18">gd拓展：<span></span><a class="support" data-info="gd"  href="javascript(0);"></a></p>
+                <p class="fs-16 lh-18">mb_string拓展：<span></span><a class="support" data-info="mb_string"  href="javascript(0);"></a></p>
+              </div>
+              
+              <button type="button" class="btn btn-default">上一步</button>
+              <button type="button" class="btn btn-primary float-right" id="next-btn">下一步</button>
+            </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="../static/my_jquery/js/my.jquery.js"></script>
+    <script src="../static/my_jquery/js/common.js"></script>
+    <script type="text/javascript">
+      $.ready(function () {
+          $.ajax({
+            url: './controller.php?a=index',
+            type: 'post',
+            dataType: 'json',
+            data: {
+              'action': 'index'
+            },
+            success: function (res, code, xmlhttp) {
+              //如果返回的不是合法数据 就弹窗警告
+              if (res.status !== 200) {
+                alert(res.mess);
+                return false;
+              }
+              //否则将接受到的数据渲染到页面
+              var data = res.data;
+              var info = $('.support');
+              var len = info.length;
+              info[0].previousElementSibling.innerText = data[info[0].getAttribute('data-info')]; //系统
+              info[0].setAttribute('data-flag', 1);
+              info[1].previousElementSibling.innerText = data[info[1].getAttribute('data-info')];
+              //简单判断php版本是否符合要求
+              var version = data[info[1].getAttribute('data-info')].split('.');
+              var type_flag = version[0] <= 5 && version[1] < 6 ? 0 : 1;  //小于5.6的版本 只看前两位 现存版本第二位数字最大的是5.6
+              info[1].setAttribute('data-flag', type_flag); //遍历添加数据
+              for (var i = 2; i < len; i++) {
+                var key = info[i].getAttribute('data-info');
+                type_flag = data[key] === 'YES' ? 1 : 0;
+                info[i].setAttribute('data-flag', type_flag);
+                info[i].previousElementSibling.innerText = data[key];
+              }
+            },
+            error: function (obj, status) {
+              showTopMessage('请检查网络或者稍后重试！',false,1500);
+            }
+          });
+
+          //当下一步按钮发生点击时
+          $('#next-btn').on('click', function () {
+            var flag = true;
+            //遍历data-flag属性
+            var info = $('.support');
+            var len = info.length;
+            for(var i = 0;i < len;i++){
+              if(info[i].getAttribute('data-flag') === "0"){
+                flag = false;
+                break;
+              }
+            }
+            if(!flag){
+              showTopMessage('当前环境不建议进行安装HeyPass',false,1500);
+              return false;
+            }
+
+            //环境满足条件 则设置cookie 并跳转页面
+            $.cookie('install_step1','YES',{exdays:1});
+            window.location.href = window.location.protocol + '/install/step2.html';
+          });
+        });
+    </script>
+  </body>
+</html>

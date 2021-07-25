@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="renderer" content="webkit" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- 引入ico图标 -->
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+  <title>HeyPass-</title>
+  <!-- 引入可能需要的图标 -->
+  <link rel="stylesheet" type="text/css" href="__CSS__/materialdesignicons.min.css" />
+  <link rel="stylesheet" type="text/css" href="__CSS__/base.css" />
+  <link rel="stylesheet" type="text/css" href="__CSS__/style.css" />
+  <link href="__JS__/video.js/video.min.css" rel="stylesheet">
+  <!-- video Fantasy主题 -->
+  <link href="__JS__/video.js/themes_fantasy.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: #ede7da url("__IMG__/body_bg.png") repeat;
+      background-image: url("__IMG__/body_bg.png");
+      background-position-x: initial;
+      background-position-y: initial;
+      background-size: initial;
+      background-repeat-x: repeat;
+      background-repeat-y: repeat;
+      background-attachment: initial;
+      background-origin: initial;
+      background-clip: initial;
+      background-color: rgb(237, 231, 218);
+    }
+
+    #show {
+      line-height: 24px;
+    }
+
+    /*处理ie9无法居中问题*/
+    .col-lg-7 {
+      display: block;
+    }
+
+    /*设置video-js 也就是所有的视频和音频宽度为100% 自适应*/
+    .video-js {
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 容器 -->
+  <div class="container-fluid">
+    <div class="row">
+      <!-- 水平居中 -->
+      <div class="col-lg-7 m-lr-auto">
+
+        <div id="output" class="p-20" style="min-height: 100vh;">
+
+        </div>
+
+        <div class="col-center-block">
+          <button id="show" type="button" class="btn btn-success btn-round btn-w-md">
+            <i class="mdi mdi-shield-lock mdi-24px"></i>安全显示
+          </button>
+        </div>
+
+        <div id="data" class="hidden" data-value="{$content}" data-title="{$title}">
+          <input type="hidden" class="hidden" id="token2" name="token2" value="{$token2}" />
+          <input type="hidden" class="hidden" id="sign2" name="sign2" value="{$sign2}" />
+        </div>
+
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <!-- 引入jquery -->
+  <script src="__JS__/my.jquery.js"></script>
+  <script src="__JS__/crypto-js/aes.js"></script>
+  <script src="__JS__/video.js/video.min.js"></script>
+  <script src="__JS__/video.js/zh-CN.min.js"></script>
+  <script src="__JS__/common.js"></script>
+  <script src="__JS__/heigobacktop.min.js"></script>
+  <script>
+    $.ready(function () {
+
+      //当安全显示发生点击事件时
+      $('#show').on('click', function () {
+        var data = $('#data');
+        //解密标题
+        var title = dataHelperAES(data.getAttribute('data-title'));
+        var h = document.createElement('h1');
+        h.innerText = title;
+        //更改页面title页面标题
+        $('title').innerText = $('title').innerText + title;
+        //将标题追加到output
+        $('#output').appendChild(h);
+        //解密内容
+        var content = dataHelperAES(data.getAttribute('data-value'));
+        //创建div并解析为节点
+        var temp = document.createElement('div');
+        temp.innerHTML = content;
+        //将节点追加回output
+        $('#output').appendChild(temp);
+        this.parentNode.setAttribute('class', 'hidden');
+        try {
+          //遍历video标签和audio标签
+          var video = document.getElementsByTagName('video');
+          var len = video.length;
+          var sel;
+          if (len !== 0) {
+            //遍历并且初始化播放器
+            for (var i = 0; i < len; i++) {
+              sel = video[i].getAttribute('id');
+              //初始化videojs
+              var player = videojs(sel, {
+                //设置语言
+                language: 'zh-CN',
+                //设置宽度
+                // width: $('#output').offsetWidth - 40,
+              });
+            }
+          }
+          //获取音频标签
+          var audio = document.getElementsByTagName('audio');
+          var len = audio.length;
+          if (len !== 0) {
+            //遍历并且初始化播放器
+            for (var i = 0; i < len; i++) {
+              sel = audio[i].getAttribute('id');
+              //初始化videojs
+              var player = videojs(sel, {
+                //设置语言
+                language: 'zh-CN',
+                //设置宽度
+                // width: $('#output').offsetWidth - 40,
+                height: 57,
+              });
+            }
+          }
+        } catch (e) {
+          showTopMessage('视频或音频解析失败，请检查id或链接是否有误！', false, 1500);
+        }
+
+      });
+
+      //实例化返回顶部插件
+      var back = new HeiGoBackTop();
+      back.onBeforeCreate(function () {
+        //随机颜色
+        this.themes = Math.round(Math.random() * 11);
+        this.show_height = 150;
+      });
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,760 @@
+body {
+  height: 100%;
+  overflow-x: hidden;
+  background-color: #F4F5FA;
+  font-size: 14px;
+}
+
+/*容器*/
+.heypass-layout-container {
+  width: 100%;
+}
+
+/* ------------------------ 侧边栏区域 ----------------------------*/
+.heypass-layout-sidebar {
+  position: fixed;
+  display: block;
+  top: 0;
+  bottom: 0;
+  z-index: 5;
+  width: 240px;
+  background-color: #fff;
+}
+
+.sidebar-header {
+  position: relative;
+  overflow: hidden;
+  z-index: 999;
+  width: 100%;
+  background-color: #FFF;
+  -webkit-box-shadow: 0 1px 1px -1px rgba(77, 82, 89, 0.15);
+  box-shadow: 0 1px 1px -1px rgba(77, 82, 89, 0.15);
+  border: 1px solid rgba(77, 82, 89, 0.07);
+}
+
+.sidebar-header a {
+  display: block;
+  width: 100%;
+  height: 66px;
+  text-align: center;
+}
+
+.sidebar-header a img {
+  max-width: 238px;
+  margin-top: 14px;
+}
+
+.siderba-main {
+  display: block;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  border-top: 1px solid rgba(77, 82, 89, 0.07);
+}
+
+.siderba-main .nav-drawer {
+  list-style: none;
+}
+
+.nav-drawer>li {
+  position: relative;
+  display: block;
+}
+
+.nav-drawer>li>a {
+  display: block;
+  height: 48px;
+  line-height: 48px;
+  padding: 0 15px 0 52.99999px;
+  /*继承祖先元素的颜色*/
+  color: inherit;
+}
+
+.nav-drawer>li>a>i {
+  position: absolute;
+  left: 21px;
+  font-size: 1.25em;
+}
+
+/*选中链接颜色*/
+.nav-drawer a:hover {
+  border-color: rgba(234, 234, 234, 0.3);
+  color: #33cabb;
+}
+
+.nav-drawer>.active>a {
+  background-color: rgba(234, 234, 234, 0.3);
+}
+
+.nav-drawer>.active>a:hover {
+  color: #000;
+}
+
+[data-sidebarbg*='color_'] .nav-drawer a:hover {
+  border-color: rgba(234, 234, 234, 0.3);
+  background-color: rgba(234, 234, 234, .075);
+  color: #fff;
+}
+
+/*选中链接颜色*/
+[data-sidebarbg*='color_'] .nav-drawer>.active>a {
+  border-color: rgba(255, 255, 255, .35);
+  background-color: rgba(255, 255, 255, .075) !important;
+}
+
+/*版权*/
+.sidebar-footer {
+  margin-top: 24px;
+  padding: 24px;
+  border-top: 1px solid rgba(77, 82, 89, 0.07);
+}
+
+.sidebar-footer .copyright {
+  
+}
+
+/* ------------------------ 头部区域 ---------------------------- */
+.heypass-layout-header {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 4;
+  padding-left: 240px;
+  box-shadow: 4px 0 5px rgba(0, 0, 0, .035);
+  background: #fff;
+}
+
+.heypass-layout-header .navbar {
+  min-height: 68px;
+  background-color: transparent;
+  padding: 0 1rem;
+}
+
+.navbar-left {
+  display: inline-block;
+  padding: 1rem 0;
+}
+
+/* 侧边栏开关 */
+.heypass-aside-toggler {
+  margin-right: .25rem;
+  padding: .25rem .95rem .25rem .25rem;
+  line-height: 1.5;
+  cursor: pointer;
+}
+
+.heypass-aside-toggler .heypass-toggler-bar {
+  display: block;
+  height: 2px;
+  width: 20px;
+  background-color: #4d5259;
+  margin: 4px 0px;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+}
+
+
+.heypass-aside-toggler .heypass-toggler-bar:nth-child(2) {
+  width: 15px;
+}
+
+.heypass-aside-toggler:hover .heypass-toggler-bar:nth-child(2) {
+  width: 20px;
+}
+
+.heypass-layout-sidebar-close .heypass-aside-toggler .heypass-toggler-bar {
+  width: 20px;
+}
+
+.navbar-right {
+  display: inline-block;
+  list-style: none;
+  float: right;
+}
+
+.navbar-right .dropdown {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.dropdown-menu {
+  display: block;
+  position: absolute;
+  z-index: 10000;
+  right: 0;
+  left: auto;
+  width: 262px;
+  margin-top: 0.3125rem;
+  font-size: 14px;
+  padding: .5rem 0;
+  border-radius: 0;
+  -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.075);
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.075);
+  background-color: #fff;
+}
+
+.dropdown-themes .dropdown-menu {
+  display: none;
+}
+
+.cheat-icon{
+    display: block;
+    height: 68px;
+    font-size: 1.6rem;
+    line-height: 68px;
+    padding: 0 5px;
+    cursor: pointer;
+}
+
+.cheat-icon .badge{
+  font-size: 50%;
+  position: absolute;
+  top: 10px;
+  left: 22px;
+}
+
+
+
+.dropdown-menu li {
+  color: #000;
+}
+
+.dropdown p {
+  font-size: 14px;
+  padding: 5px 15px 20px 15px;
+}
+
+/* 主题选择 */
+.drop-skin-li {
+  font-size: 12px;
+  padding: 0px 12px;
+}
+
+.drop-skin-li input[type=radio] {
+  display: none;
+}
+
+.drop-skin-li input[type=radio]+label {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  margin: 3px;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+  -webkit-transition: all .1s ease;
+  transition: all .1s ease;
+}
+
+.drop-skin-li input[type=radio]:checked+label {
+  position: relative;
+}
+
+.drop-skin-li input[type=radio]:checked+label::after {
+  content: "\f12c";
+  font-family: "Material Design Icons";
+  font-size: 1rem;
+  display: block;
+  color: #fff;
+  width: 100%;
+  text-align: center;
+  line-height: 18px;
+  position: absolute;
+  top: 0px;
+  -webkit-transition: .2s;
+  transition: .2s;
+}
+
+.drop-skin-li .inverse input[type=radio]:checked+label::after {
+  color: #4d5259;
+}
+
+#header_bg_1+label,
+#logo_bg_1+label,
+#sidebar_bg_1+label,
+#site_theme_1+label {
+  background-color: #fff;
+  border: 1px solid #f0f0f0;
+}
+
+#header_bg_2+label,
+#logo_bg_2+label,
+#sidebar_bg_2+label {
+  background-color: #15c377;
+  border: 1px solid #15c377;
+}
+
+#header_bg_3+label,
+#logo_bg_3+label,
+#sidebar_bg_3+label {
+  background-color: #48b0f7;
+  border: 1px solid #48b0f7;
+}
+
+#header_bg_4+label,
+#logo_bg_4+label,
+#sidebar_bg_4+label {
+  background-color: #faa64b;
+  border: 1px solid #faa64b;
+}
+
+#header_bg_5+label,
+#logo_bg_5+label,
+#sidebar_bg_5+label {
+  background-color: #f96868;
+  border: 1px solid #f96868;
+}
+
+#header_bg_6+label,
+#logo_bg_6+label,
+#sidebar_bg_6+label {
+  background-color: #926dde;
+  border: 1px solid #926dde;
+}
+
+#header_bg_7+label,
+#logo_bg_7+label,
+#sidebar_bg_7+label {
+  background-color: #33cabb;
+  border: 1px solid #33cabb;
+}
+
+#header_bg_8+label,
+#logo_bg_8+label,
+#sidebar_bg_8+label,
+#site_theme_2+label {
+  background-color: #465161;
+  border: 1px solid #465161;
+}
+
+#header_bg_1+label,
+#logo_bg_1+label,
+#sidebar_bg_1+label,
+#site_theme_1+label {
+  background-color: #fff;
+  border: 1px solid #f0f0f0;
+}
+
+#header_bg_2+label,
+#logo_bg_2+label,
+#sidebar_bg_2+label {
+  background-color: #15c377;
+  border: 1px solid #15c377;
+}
+
+#header_bg_3+label,
+#logo_bg_3+label,
+#sidebar_bg_3+label {
+  background-color: #48b0f7;
+  border: 1px solid #48b0f7;
+}
+
+#header_bg_4+label,
+#logo_bg_4+label,
+#sidebar_bg_4+label {
+  background-color: #faa64b;
+  border: 1px solid #faa64b;
+}
+
+#header_bg_5+label,
+#logo_bg_5+label,
+#sidebar_bg_5+label {
+  background-color: #f96868;
+  border: 1px solid #f96868;
+}
+
+#header_bg_6+label,
+#logo_bg_6+label,
+#sidebar_bg_6+label {
+  background-color: #926dde;
+  border: 1px solid #926dde;
+}
+
+#header_bg_7+label,
+#logo_bg_7+label,
+#sidebar_bg_7+label {
+  background-color: #33cabb;
+  border: 1px solid #33cabb;
+}
+
+#header_bg_8+label,
+#logo_bg_8+label,
+#sidebar_bg_8+label,
+#site_theme_2+label {
+  background-color: #465161;
+  border: 1px solid #465161;
+}
+
+#site_theme_3+label {
+  background: -webkit-linear-gradient(135deg, #65FDF0 10%, #1D6FA3 100%);
+  background: -o-linear-gradient(135deg, #65FDF0 10%, #1D6FA3 100%);
+  background: -moz-linear-gradient(135deg, #65FDF0 10%, #1D6FA3 100%);
+  background: linear-gradient(135deg, #65FDF0 10%, #1D6FA3 100%);
+}
+
+
+input[type=radio] {
+  display: none;
+}
+
+.heypass-themes {
+  display: block;
+  height: 68px;
+  font-size: 1.6rem;
+  line-height: 68px;
+  padding: 0 5px;
+  cursor: pointer;
+}
+
+/*用户信息*/
+.dropdown-user {
+  margin-left: 20px;
+}
+
+.user-info {
+  display: block;
+  height: 68px;
+  vertical-align: middle;
+  border: 0;
+}
+
+.user-info .img-avatar {
+  max-width: 50px;
+  margin-top: 8px;
+  margin-right: 10px;
+}
+
+.user-info span {
+  display: inline-block;
+  height: 68px;
+  line-height: 68px;
+  vertical-align: top;
+  color: #000;
+}
+
+.user-info span::after {
+  display: inline-block;
+  margin-left: .255em;
+  vertical-align: .255em;
+  content: "";
+  border-top: .3em solid;
+  border-right: .3em solid transparent;
+  border-bottom: 0;
+  border-left: .3em solid transparent;
+}
+
+.dropdown-user .dropdown-menu {
+  position: absolute;
+  display: none;
+  width: 160px;
+  z-index: 10000;
+}
+
+.dropdown-user .dropdown-menu li {
+  padding: 10px 15px;
+}
+
+.dropdown-user .dropdown-menu a {
+  color: #000;
+}
+
+.dropdown-user .dropdown-menu li:hover {
+  background: rgba(0, 0, 0, .035);
+}
+
+/*iframe页面*/
+#iframe-pages {
+  width: 100%;
+  height: calc(100% - 48px);
+  padding-top: 48px;
+  margin: 0;
+  overflow: hidden;
+}
+
+.tab-item {
+  display: none;
+}
+
+#iframe-pages .active {
+  display: block;
+}
+
+/* ------------------------ 主题颜色切换 ---------------------------- */
+
+[data-logobg='color_2'] .sidebar-header,
+[data-sidebarbg='color_2'] .heypass-layout-sidebar,
+[data-headerbg='color_2'] .heypass-layout-header {
+  background-color: #15C377;
+}
+
+[data-logobg='color_3'] .sidebar-header,
+[data-sidebarbg='color_3'] .heypass-layout-sidebar,
+[data-headerbg='color_3'] .heypass-layout-header {
+  background-color: #48b0f7;
+}
+
+[data-logobg='color_4'] .sidebar-header,
+[data-sidebarbg='color_4'] .heypass-layout-sidebar,
+[data-headerbg='color_4'] .heypass-layout-header {
+  background-color: #faa64b;
+}
+
+[data-logobg='color_5'] .sidebar-header,
+[data-sidebarbg='color_5'] .heypass-layout-sidebar,
+[data-headerbg='color_5'] .heypass-layout-header {
+  background-color: #f96868;
+}
+
+[data-logobg='color_6'] .sidebar-header,
+[data-sidebarbg='color_6'] .heypass-layout-sidebar,
+[data-headerbg='color_6'] .heypass-layout-header {
+  background-color: #926dde;
+}
+
+[data-logobg='color_7'] .sidebar-header,
+[data-sidebarbg='color_7'] .heypass-layout-sidebar,
+[data-headerbg='color_7'] .heypass-layout-header {
+  background-color: #33cabb;
+}
+
+[data-logobg='color_8'] .sidebar-header,
+[data-sidebarbg='color_8'] .heypass-layout-sidebar,
+[data-headerbg='color_8'] .heypass-layout-header {
+  background-color: #465161;
+}
+
+[data-logobg*='color_'] .sidebar-header,
+[data-sidebarbg*='color_'] .heypass-layout-sidebar,
+[data-headerbg*='color_'] .heypass-layout-header,
+[data-headerbg*='color_'] .user-info span {
+  color: #fff;
+}
+
+[data-headerbg*='color_'] .heypass-layout-header .heypass-toggler-bar {
+  background-color: #fff;
+}
+
+/* ------------------------ 主体区域 ---------------------------- */
+.heypass-layout-main {
+  position: absolute;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  padding-left: 240px;
+  padding-top: 68px;
+  /*调整盒模型*/
+  box-sizing: border-box;
+}
+
+#iframe-content {
+  height: 100%;
+}
+
+.iframe-wrapper {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+}
+
+.iframe-navbar {
+  width: 100%;
+  height: 48px;
+  z-index: 200;
+  position: absolute;
+  /*ie9下flex失效 故采用inline-block布局兼容*/
+  display: -moz-box;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  background-color: #fff;
+  -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.075);
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.075);
+  font-size: 0;
+  /*兼容ie9*/
+}
+
+.nav-tools-left {
+  width: 45px;
+  height: 48px;
+  /*兼容ie9*/
+  display: inline-block;
+  vertical-align: top;
+}
+
+.nav-tools-left a {
+  display: block;
+  padding: 7px 12.5px 15px 12.5px;
+}
+
+.nav-tools-left a i {
+  font-size: 20px;
+  color: #000;
+}
+
+.nav-tools-left a:hover {
+  border-bottom: 1px solid #33cabb;
+}
+
+.nav-tools-panel {
+  width: calc(100% - 147px);
+  /*兼容ie9*/
+  display: inline-block;
+  vertical-align: top;
+  overflow: hidden;/*超出部分隐藏*/
+}
+
+.nav-tabs {
+  width: 10000px; /*设置长点 方便存放标签*/
+  height: 48px;
+}
+
+.nav-item {
+  display: inline-block;
+  position: relative;
+}
+
+.nav-item a {
+  display: block;
+  height: 48px;
+  line-height: 48px;
+  padding: 0 10px;
+  color: #000;
+  /*兼容ie9*/
+  font-size: 14px;
+}
+
+.nav-tabs li:hover {
+  height: 47px;
+  border-bottom: 1px solid #33cabb;
+}
+
+.nav-tabs li.active{
+  height: 47px;
+  border-bottom: 1px solid #33cabb;
+}
+
+/*关闭按钮*/
+.close{
+  font-size: 15px;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  line-height: 17px;
+  border-radius: 50%;
+  text-align: center;
+  cursor: pointer;
+}
+
+.close:hover{
+  background-color: #ff5500;
+  color: #fff;
+}
+
+.nav-tools-right {
+  width: 102px;
+  /*兼容ie9*/
+  display: inline-block;
+  vertical-align: top;
+}
+
+.nav-tools-right a {
+  display: inline-block;
+  padding: 7px 12.5px 15px 12.5px;
+  color: #000;
+}
+
+.nav-tools-right a i {
+  font-size: 20px;
+  color: #000;
+}
+
+.nav-tools-right a:hover {
+  border-bottom: 1px solid #33cabb;
+}
+
+.nav-tools-right .caret {
+  position: absolute;
+  top: 20px;
+  /* 如果不兼容ie9 13px即可 */
+}
+
+.nav-tools-right .caret::after {
+  display: inline-block;
+  margin-left: .255em;
+  vertical-align: .255em;
+  content: "";
+  border-top: .3em solid;
+  border-right: .3em solid transparent;
+  border-bottom: 0;
+  border-left: .3em solid transparent;
+  /*兼容ie9*/
+  font-size: 20px;
+}
+
+.dropdown-tabs {
+  width: 160px;
+  display: none;
+}
+
+.dropdown-tabs li {
+  height: 40px;
+}
+
+.dropdown-tabs a {
+  display: block;
+  height: 40px;
+  line-height: 40px;
+  padding: 0 12.5px;
+}
+
+.dropdown-tabs a:hover {
+  background-color: rgba(170, 255, 255, 0.1);
+  border: 0;
+}
+
+/*当a标签鼠标移入*/
+.dropdown-tabs .dropdown-item:hover{
+  background-color: rgba(170, 255, 255, 0.1);
+  border: 0;
+}
+
+/* ------------------------ 响应式设计 ---------------------------- */
+@media (max-width:768px) {
+  .heypass-layout-sidebar {
+    display: none;
+  }
+
+  .heypass-layout-header,
+  .heypass-layout-main {
+    padding-left: 0;
+  }
+
+  .dropdown-menu {
+    left: -70px;
+  }
+
+  .dropdown-user .dropdown-menu {
+    left: -30px;
+  }
+
+  .dropdown-tabs {
+    left: auto;
+    right: 0;
+  }
+
+   /*遮罩层*/
+  .mask-modal {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .5);
+    left: 0;
+    opacity: 1;
+    top: 0;
+    visibility: visible;
+    z-index: 5;
+    position: fixed;
+  }
+}

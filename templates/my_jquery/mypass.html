@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="renderer" content="webkit" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- 引入ico图标 -->
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+  <title>HeyPass-修改密码</title>
+  <link rel="stylesheet" type="text/css" href="__CSS__/materialdesignicons.min.css">
+  <link rel="stylesheet" type="text/css" href="__CSS__/base.css">
+  <link rel="stylesheet" type="text/css" href="__CSS__/style.css">
+</head>
+
+<body>
+  <!-- 修改密码 -->
+  <div class="container-fluid p-t-15">
+
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card">
+          <header class="card-header">
+            <div class="card-title">修改密码</div>
+          </header>
+          <div class="card-body">
+
+            <div class="form-group">
+              <label for="username">用户名</label>
+              <input type="text" class="form-control" name="username" id="username" value="{:session('username','','admin')}" disabled="disabled">
+            </div>
+            <div class="form-group">
+              <label for="old-password">旧密码</label>
+              <input type="password" class="form-control" name="oldpwd" id="oldpwd" placeholder="请输入账号的原登录密码" />
+            </div>
+            <div class="form-group">
+              <label for="new-password">新密码</label>
+              <input type="password" class="form-control" name="newpwd" id="newpwd" placeholder="请输入新的密码" />
+              <small class="help-block">密码首位必须为字母，且长度在10-20位，只允许大小写字母、数字及,-@#_</small>
+              <input type="hidden" name="token" value="{$Request.token}" />
+              <input type="hidden" name="sign" value="{$Think.config.rsa_public_key}" />
+            </div>
+            <div class="form-group">
+              <label for="confirm-password">确认新密码</label>
+              <input type="password" class="form-control" name="confirmpwd" id="confirmpwd"
+                placeholder="请再次输入新的密码" />
+            </div>
+            <button type="submit" class="btn btn-primary">修改密码</button>
+
+          </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  <script src="__JS__/my.jquery.js"></script>
+  <script src="//cdn.bootcdn.net/ajax/libs/jsencrypt/2.3.1/jsencrypt.min.js"></script>
+  <script src="__JS__/common.js"></script>
+  <script type="text/javascript">
+    $.ready(function () {
+      //当修改密码按钮发生点击事件时
+      $('.btn').on('click', function () {
+        //先校验旧密码格式长度是否符合要求
+        var oldpwd = $('#oldpwd').value;
+        var len = oldpwd.length;
+        if(!checkPwd(oldpwd,len,'旧')) return false;
+      
+        //再校验新密码格式长度是否符合要求
+        var newpwd = $('#newpwd').value;
+        len = newpwd.length;
+        if(!checkPwd(newpwd,len,'新')) return false;
+        //校验新密码和再次确认密码 防止用户输错
+        var confirmpwd  = $('#confirmpwd').value;
+        if(newpwd !== confirmpwd){
+          showTopMessage('修改失败，两次新密码不一致！', false, 1500);
+          return false;
+        }
+
+        //校验新密码是否与老密码一致
+        if(newpwd === oldpwd){
+          showTopMessage('新密码与旧密码一致，没有修改的必要哟~', false, 1500);
+          return false;
+        }
+        //符合要求则提交
+        $.cookie('heypass_token', dataHelper('HeyPass' + Math.random()));
+
+        $.ajax({
+          url: getPathName(),
+          type: 'post',
+          dataType: 'json',
+          data: {
+            'old_password': dataHelper(oldpwd),
+            'new_password': dataHelper(newpwd),
+          },
+          headers: {
+            'Access-token': dataHelper($('[name="token"]').value),
+            'Access-token2': dataHelper(window.location.host),
+          },
+          success: function (res, code, xmlhttp) {
+            if (res.status === 200) {
+              showTopMessage('密码修改成功，即将重新登录，请稍候~', true, 1500);
+              //1.5秒后开始进行跳转操作
+              setTimeout(function () {
+                window.parent.location.href = res.data;  //父窗口跳转 即整个页面跳转
+              }, 1500);
+              return;
+            }
+            //刷新token
+            refreshToken();
+            showTopMessage(res.mess + ',' + res.data, false, 1500);
+          },
+          error: function (obj, status) {
+            console.log(status);
+            showTopMessage('请检查网络情况或稍后再试', false, 1500);
+          }
+        });
+      });
+
+      //检查密码是否符合要求
+      function checkPwd(val,len,type){
+        if(len < 10 || len > 20){
+          showTopMessage('修改失败，' + type + '密码长度有误', false, 1500);
+          return false;
+        }
+        //正则表达式验证密码格式
+        var reg = /^[a-zA-Z]{1}([a-zA-Z0-9]|[-@#_,]){9,19}$/g;
+        if(!reg.test(val)){
+          showTopMessage('修改失败，' + type + '密码格式有误', false, 1500);
+          return false;
+        }
+        return true;
+      }
+    });
+  </script>
+</body>
+
+</html>

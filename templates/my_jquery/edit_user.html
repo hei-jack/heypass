@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="renderer" content="webkit" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- 引入ico图标 -->
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+  <title>HeyPass-编辑亲友</title>
+  <link rel="stylesheet" type="text/css" href="__CSS__/materialdesignicons.min.css">
+  <link rel="stylesheet" type="text/css" href="__CSS__/base.css">
+  <link rel="stylesheet" type="text/css" href="__CSS__/style.css">
+</head>
+
+<body>
+  <!-- 编辑亲友 -->
+  <div class="container-fluid p-t-15">
+
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card">
+          <header class="card-header">
+            <div class="card-title">编辑亲友</div>
+          </header>
+          <div class="card-body">
+
+            <div class="form-group col-md-12">
+              <label for="username">用户名</label>
+              <input type="text" class="form-control" id="username" name="username" value="{$user.username}" placeholder="请输入账号" disabled="disabled" />
+            </div>
+
+            <div class="form-group col-md-12">
+              <label for="nickname">昵称</label>
+              <input type="text" class="form-control" id="nickname" name="nickname" value="{$user.nickname}" data-value="{$user.nickname}" placeholder="请输入昵称" />
+              <small class="help-block">昵称只有管理员能设置和修改，亲友无法自己修改昵称。更改之后，下次登录才生效。</small>
+            </div>
+
+            <div class="form-group col-md-12">
+              <label>状态</label>
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="state" data-value="{$user.state}" {if $user.state === 1}checked="checked"{/if}>
+                <label class="custom-control-label" for="state"></label>
+              </div>
+              <small class="help-block">禁用后用户将无法正常登陆。</small>
+            </div>
+
+
+            <div class="form-group col-md-12">
+              <button type="submit" id="submit" class="btn btn-primary">保存</button>
+              <input type="hidden" name="token" value="{$Request.token}" />
+              <input type="hidden" name="sign" value="{$Think.config.rsa_public_key}" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="__JS__/my.jquery.js"></script>
+  <script src="__JS__/jsencrypt/jsencrypt.min.js"></script>
+  <script src="__JS__/common.js"></script>
+  <script type="text/javascript">
+    $.ready(function () {
+      //当保存按钮发生点击事件时
+      $('#submit').on('click', function () {
+        //获取账号
+        var username = $('#username').value;
+        var len = username.length;
+        //检查长度
+        if(len < 8 || len > 20){
+          showTopMessage('保存失败,用户名长度有误！',false,1500);
+          return;
+        }
+        var reg = /^[a-z]{1}[a-z0-9_]{7,19}$/ig;
+        //检查格式
+        if(!reg.test(username)){
+          showTopMessage('保存失败,用户名格式有误！',false,1500);
+          return;
+        }
+
+        //昵称
+        var nickname = $('#nickname').value;
+        len = nickname.length;
+        if(len < 1 || len > 7){
+          showTopMessage('保存失败,昵称长度有误！',false,1500);
+          return;
+        }
+        reg = /^[a-zA-z0-9\u4e00-\u9fa5_]+$/g;
+        if(!reg.test(nickname)){
+          showTopMessage('保存失败,昵称格式有误！',false,1500);
+          return;
+        }
+
+        //状态
+        var state = $('#state').checked ? '1':'0';
+
+        //检查是否更改
+        if($('#nickname').getAttribute('data-value') === nickname && $('#state').getAttribute('data-value') === state){
+          showTopMessage('保存失败,您并没有修改任何数据~',false,1500);
+          return;
+        }
+
+        //检查是否为管理员 且禁用自己
+        if(getUrlParam('id') === '1' && state === '0'){
+          showTopMessage('保存失败,禁用自己是个骚操作~',false,1500);
+          return;
+        }
+
+        $.cookie('heypass_token', dataHelper('HeyPass' + Math.random()));
+
+        //校验通过发送ajax请求
+        $.ajax({
+          url: getPathName(),
+          type: 'post',
+          dataType: 'json',
+          data: {
+            'id': getUrlParam('id'),
+            'username': dataHelper(username),
+            'nickname': dataHelper(nickname),
+            'state': state,
+          },
+          headers: {
+            'Access-token': dataHelper($('[name="token"]').value),
+            'Access-token2': dataHelper(window.location.host),
+          },
+          success: function (res, code, xmlhttp) {
+            if (res.status === 200) {
+              showTopMessage('保存成功，请前往亲友管理页面查看~', true, 1500);
+              return;
+            }
+            //刷新token
+            refreshToken();
+            showTopMessage(res.mess + ',' + res.data, false, 1500);
+          },
+          error: function (obj, status) {
+            // console.log(status);
+            showTopMessage('请检查网络情况或稍后再试', false, 1500);
+          }
+        });
+      });
+    });
+  </script>
+</body>
+
+</html>

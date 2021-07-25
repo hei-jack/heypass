@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="renderer" content="webkit" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- 引入ico图标 -->
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+  <title>HeyPass-设置安全密码</title>
+  <!-- 引入可能需要的图标 -->
+  <link rel="stylesheet" type="text/css" href="__CSS__/materialdesignicons.min.css" />
+  <link rel="stylesheet" type="text/css" href="__CSS__/base.css" />
+  <link rel="stylesheet" type="text/css" href="__CSS__/style.css" />
+  <style>
+    .container-fluid {
+      height: 100vh;
+      background-image: url("__IMG__/bg-twoauth.jpg");
+      background-size: cover;
+      background-repeat: no-repeat;
+    }
+
+    .card-header {
+      line-height: 24px;
+    }
+
+    [type='button'] {
+      line-height: 24px;
+    }
+
+    #submit {
+      line-height: 24px;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 容器 -->
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-4 col-center-block">
+
+        <div class="card">
+          <header class="card-header">
+            <div class="card-title"><i class="mdi mdi-shield-lock mdi-24px"></i>设置安全密码</div>
+          </header>
+          <div class="card-body">
+            <div class="form-group col-md-12">
+              <textarea class="form-control" id="safepass" rows="3" name="safepass"
+                placeholder="点击随机按钮 -> 生成安全密码 -> 遇见喜欢的 -> 妥善保管 ->点击确认按钮" readonly="readonly"></textarea>
+              <input type="hidden" name="token" value="{$Request.token}" />
+              <input type="hidden" name="sign" value="{$Think.config.rsa_public_key}" />
+            </div>
+            <div class="form-group col-md-12">
+              <label for="length">选择长度</label>
+              <div class="form-controls">
+                <select name="type" class="form-control" id="length">
+                  <option value="1">16位汉字</option>
+                  <option value="2" selected="selected">28位汉字</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group col-md-12">
+              <small
+                class="help-block code">安全密码采用强大的区块链加密算法随机生成，随机到您喜欢的安全密码后，强烈建议先将其记在笔记本，或者妥善保存在您认为的安全设备后再点击确认按钮。</small>
+            </div>
+            <div class="form-group col-md-12 text-center">
+              <button id="copy" type="button" class="btn btn-success btn-round btn-w-md m-r-5"
+                data-clipboard-target="#safepass">
+                <i class="mdi mdi-content-copy mdi-24px"></i>复制
+              </button>
+              <button id="submit" type="button" class="btn btn-danger btn-round btn-w-md m-r-5">
+                <i class="mdi mdi-shield-lock mdi-24px"></i>确认
+              </button>
+              <button id="getSafePass" type="button" class="btn btn-success btn-round btn-w-md">
+                <i class="mdi mdi-shield-key mdi-24px"></i>随机
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 引入myjquery -->
+  <script src="__JS__/my.jquery.js"></script>
+
+  <!-- 引入CryptoJS加密插件 进行aes加密 弃用 最后决定使用rsa -->
+  <!-- <script src="//cdn.bootcdn.net/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script> -->
+  <!-- <script src="//cdn.bootcdn.net/ajax/libs/crypto-js/3.1.2/components/pad-zeropadding-min.js"></script> -->
+
+  <!-- 引入jsencrypt 进行rsa加密 -->
+  <script src="__JS__/jsencrypt/jsencrypt.min.js"></script>
+  <!-- 引入bip39助记词生成js -->
+  <script src="__JS__/bip39/sjcl.js"></script>
+  <script src="__JS__/bip39/mnemonic.js"></script>
+  <script src="__JS__/bip39/chinese.js"></script>
+  <!-- clipboard插件 -->
+  <script src="__JS__/clipboard.js/clipboard.min.js"></script>
+  <!-- 公共js -->
+  <script src="__JS__/common.js"></script>
+  <script>
+    $.ready(function () {
+
+      //当安全验证按钮发生点击事件时
+      $('#submit').on('click', function () {
+        //提示用户
+        var good = confirm(
+          "请注意!请注意!请注意!\r\n安全密码一经设定，将无法更改。\r\n您的安全密码不会被存储到网站，一旦丢失，将无法找回。\r\n请妥善保管您的安全密码，泄露给他人可能成为安全隐患。");
+        if (good !== true) return false;
+        //先校验输入的安全密码是否符合规则
+
+        //校验长度
+        var data = $('#safepass').value;
+        var len = data.length;
+
+        //如果长度不等于20和32
+        if (len !== 20 && len !== 32) {
+          showTopMessage('失败了，安全密码长度有误~', false, 1500);
+          return false;
+        }
+
+        //正则匹配中文和中文逗号、句号
+        var reg =
+          /^(?:[\u3400-\u4DBF\u4E00-\u9FFC\uFA0E\uFA0F\uFA11\uFA13\uFA14\uFA1F\uFA21\uFA23\uFA24\uFA27-\uFA29]|[\uD840-\uD868\uD86A-\uD86C\uD86F-\uD872\uD874-\uD879\uD880-\uD883][\uDC00-\uDFFF]|\uD869[\uDC00-\uDEDD\uDF00-\uDFFF]|\uD86D[\uDC00-\uDF34\uDF40-\uDFFF]|\uD86E[\uDC00-\uDC1D\uDC20-\uDFFF]|\uD873[\uDC00-\uDEA1\uDEB0-\uDFFF]|\uD87A[\uDC00-\uDFE0]|\uD884[\uDC00-\uDF4A]|[，。])+$/g;
+        var mess = '失败了，安全密码格式有误~';
+        if (!reg.test(data)) {
+          //如果正则匹配失败 直接返回格式错误
+          showTopMessage(mess, false, 1500);
+          return false;
+        }
+
+        //格式校验通过 再校验汉字数量
+        var temp = data.replace(/[，。]+/g, '');
+        if (temp.length !== 16 && temp.length !== 28) {
+          //如果去除符号后余下汉字长度不符合要求
+          showTopMessage(mess, false, 1500);
+          return false;
+        }
+
+        //检查符号位置是否符合要求
+        if (!checkData(data, len)) {
+          showTopMessage(mess, false, 1500);
+          return false;
+        }
+
+        $.cookie('heypass_token', dataHelper('HeyPass' + Math.random()));
+
+        //校验通过发送ajax请求
+        $.ajax({
+          url: getPathName(),
+          type: 'post',
+          dataType: 'json',
+          data: {
+            'password': dataHelper(data)
+          },
+          headers: {
+            'Access-token': dataHelper($('[name="token"]').value),
+            'Access-token2': dataHelper(window.location.host),
+          },
+          success: function (res, code, xmlhttp) {
+            if (res.status === 200) {
+              showTopMessage('安全密码设置成功，正在跳转，请稍候~', true, 1500);
+              //1.5秒后开始进行跳转操作
+              setTimeout(function () {
+                window.location.href = res.data;
+              }, 1500);
+              return;
+            }
+            //刷新token
+            refreshToken();
+            showTopMessage(res.mess + ',' + res.data, false, 1500);
+          },
+          error: function (obj, status) {
+            console.log(status);
+            showTopMessage('请检查网络情况或稍后再试', false, 1500);
+          }
+        });
+      });
+
+      //当随机按钮发生点击事件时
+      $('#getSafePass').on('click', function () {
+        //先获取用户选择的长度
+        var len = Number($('#length').value);
+        if (len === 2) {
+          getSafePass(256);
+        } else if (len === 1) {
+          getSafePass(128);
+        } else {
+          return false;
+        }
+      });
+
+      //当复制按钮发生点击事件时
+      $('#copy').on('click', function () {
+        copy();
+      });
+
+      /*
+       * @param string str 要检查的字符串
+       * @param number len 要检查字符串的长度
+       * @return bool true通过/false未通过
+       */
+      function checkData(str, len) {
+        // if (len !== 20 && len !== 32) return false;
+        var orders = [{
+          comma: '4,14', //逗号
+          end: '9,19' //句号
+        }, {
+          comma: '7,23',
+          end: '15,31'
+        }];
+
+        var comma = str.indexOf('，') + ',' + str.lastIndexOf('，');
+        var end = str.indexOf('。') + ',' + str.lastIndexOf('。');
+        console.log(comma);
+        console.log(end);
+        var index = len === 20 ? 0 : 1;
+
+        if (orders[index]['comma'] !== comma) return false;
+        if (orders[index]['end'] !== end) return false;
+        return true;
+      }
+
+      //监听document的keyup事件 回车键弹起手动触发提交按钮点击事件
+      window.addEventListener('keyup', function (eve) {
+        var event = eve || window.event;
+        var code;
+        event.preventDefault(); //阻止默认动作
+
+        //兼容性处理
+        if (event.key !== undefined) {
+          code = event.key; //现代浏览器
+        } else if (event.keyIdentifier !== undefined) {
+          code = event.keyIdentifier; //safari
+        } else if (event.keyCode !== undefined) {
+          code = event.keyCode; //旧浏览器
+        } else {
+          code = '';
+        }
+
+        code = String(code).toUpperCase(); //转为字符串 并且转为英文大写
+
+        if (code === 'ENTER' || code === 13) $('#submit').trigger('click'); //手动触发提交按钮点击事件
+      }, false);
+
+
+      function getSafePass(length) {
+        if (length !== 256 && length !== 128) return false;
+        try {
+          //实例化助记词对象
+          var m = new Mnemonic("chinese");
+
+          //生成256位助记词
+          var words = m.generate(length);
+        } catch (e) {
+          showTopMessage('为了保证安全密码的强大随机性，推荐在谷歌Chrome浏览器下运行此页面。', false, 5000);
+          return false;
+        }
+
+
+        //生成之后进行格式处理
+        words = words.split(' '); //从空格处打断为数组
+
+        var len = words.length;
+        var start = len === 12 ? 2 : 5; //开始值
+        var step = (len / 12) * 3; //步进值
+        var flag = false; //标记位 false表示， true表示。
+
+
+        //for添加。和，符号
+        for (var i = 0; i < len; i++) {
+          if (i % step === 0) words[i] = getChinese() + words[i];
+          if (i === start) {
+            words[i] += flag ? '。' : '，';
+            flag = !flag; //取反
+            start += step;
+          }
+        }
+
+        $('#safepass').value = words.join(''); //显示到安全密码框
+      }
+
+      //获取随机汉字
+      function getChinese() {
+        return WORDLISTS["chinese"][Math.floor(Math.random() * WORDLISTS["chinese"].length)];
+      }
+
+      //复制到剪贴板
+      function copy() {
+        if ($('#safepass').value.length === 0) {
+          showTopMessage('复制到剪贴板失败，请先随机安全密码', false, 1500);
+          return false;
+        }
+        //复制插件
+        var copy = new ClipboardJS('#copy');
+        //复制成功时
+        copy.on('success', function (e) {
+          copy.destroy(); //销毁实例
+          showTopMessage('复制到剪贴板成功，快去试试粘贴吧~', true, 1500);
+        });
+        //复制失败时
+        copy.on('error', function (e) {
+          copy.destroy(); //销毁实例
+          showTopMessage('复制到剪贴板失败，自己动手抄呗~', true, 1500);
+        });
+      }
+
+    });
+  </script>
+</body>
+
+</html>

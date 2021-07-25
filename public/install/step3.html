@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="renderer" content="webkit" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- 引入ico图标 -->
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+  <title>HeyPass-安装向导</title>
+  <link rel="stylesheet" type="text/css" href="../static/my_jquery/css/materialdesignicons.min.css">
+  <link rel="stylesheet" type="text/css" href="../static/my_jquery/css/base.css">
+  <link rel="stylesheet" type="text/css" href="../static/my_jquery/css/style.css">
+  <link rel="stylesheet" type="text/css" href="./install.css">
+  <!--[if IE 9]>
+      <style>
+        /* 兼容ie9 */
+        .nav-step .nav-link{
+         display: inline-block;
+        }
+        .nav-step .nav-link::after{
+          line-height: 29px;
+        }
+        .support::after{
+          line-height: 20px;
+        }
+      </style>
+       <![endif]-->
+</head>
+
+<body>
+  <!-- 密码列表 -->
+  <div class="container-fluid p-t-15">
+
+    <div class="row">
+      <div class="col-lg-4 col-center">
+        <div class="card">
+          <header class="card-header">
+            <div class="card-title">HeyPass-安装向导</div>
+          </header>
+          <div class="card-body">
+
+            <!-- 步骤向导 -->
+            <ul class="nav nav-step text-center">
+              <li class="nav-item complete">
+                <span>环境检测</span>
+                <a class="nav-link" data-toggle="tab" href="/install/index.html"></a>
+              </li>
+
+              <li class="nav-item complete">
+                <span>后台设置</span>
+                <a class="nav-link" data-toggle="tab" href="/install/step2.html"></a>
+              </li>
+
+              <li class="nav-item">
+                <span>数据库设置</span>
+                <a class="nav-link active" data-toggle="tab" href="javascript:void(0);"></a>
+              </li>
+
+              <li class="nav-item">
+                <span>安装完成</span>
+                <a class="nav-link" data-toggle="tab" href="/install/finsh.html"></a>
+              </li>
+            </ul>
+
+            <!-- 步骤内容 -->
+            <div class="form-group">
+              <label for="host">数据库地址</label>
+              <input type="text" class="form-control" id="host" name="host" value="localhost" placeholder="请输入数据库地址">
+            </div>
+            <div class="form-group">
+              <label for="base">数据库名</label>
+              <input type="text" class="form-control" id="base" name="base" value="" placeholder="请输入数据库名">
+            </div>
+            <div class="form-group">
+              <label for="user">数据库用户名</label>
+              <input type="text" class="form-control" id="user" name="user" value="" placeholder="请输入数据库用户名">
+            </div>
+            <div class="form-group">
+              <label for="pass">数据库密码</label>
+              <input type="text" class="form-control" id="pass" name="pass" value="" placeholder="请输入数据库密码">
+            </div>
+            <div class="form-group">
+              <label for="prefix">表前缀</label>
+              <input type="text" class="form-control" id="prefix" name="prefix" value="y_" placeholder="请输入表前缀，默认为y_">
+              <small class="help-block code">点击下一步之后请耐心等候，这一步可能需要耗费比较长的时间。</small>
+            </div>
+
+            <button type="button" class="btn btn-primary" id="pre-btn">上一步</button>
+            <button type="button" class="btn btn-primary float-right" id="next-btn">下一步</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  <script src="../static/my_jquery/js/my.jquery.js"></script>
+  <script src="../static/my_jquery/js/common.js"></script>
+  <script type="text/javascript">
+    $.ready(function () {
+      //如果没有step2完成cookie 跳转回前面的step2
+      if (!$.cookie('install_step2')) window.location.href = window.location.href.replace('step3', 'step2');
+
+      //标记位
+      var flag = false;
+
+      //返回上一页
+      $('#pre-btn').on('click', function () {
+        window.history.back(-1);
+      });
+
+      //当下一步发生点击时
+      $('#next-btn').on('click', function () {
+        //防止重复点击
+        if(flag) return;
+
+        //简单校验数据
+        var host = $('#host').value;
+        if(host.length === 0){
+          showTopMessage('请输入数据库地址！',false,1500);
+          return;
+        }
+        var base = $('#base').value;
+        if(base.length === 0){
+          showTopMessage('请输入数据库名！',false,1500);
+          return;
+        }
+
+        var user = $('#user').value;
+        if(user.length === 0){
+          showTopMessage('请输入数据库用户！',false,1500);
+          return;
+        }
+
+        var pass = $('#pass').value;
+        if(pass.length === 0){
+          showTopMessage('请输入数据库密码!',false,1500);
+          return;
+        }
+
+        var prefix = $('#prefix').value;
+        if(prefix.length < 2 || prefix.match(/^[a-z]+[_]{1}$/g) === null){
+          showTopMessage('请输入合法表前缀!',false,1500);
+          return;
+        }
+
+        //标记位
+        flag = true;
+
+        //发生ajax请求
+        $.ajax({
+          url: './controller.php?a=step3',
+          type: 'post',
+          dataType: 'json',
+          data: {
+            'host': host,
+            'dbname': base,
+            'user': user,
+            'pass': pass,
+            'prefix': prefix,
+          },
+          success: function (res, code, xmlhttp) {
+            flag = false;
+            //如果返回的不是合法数据 就弹窗警告
+            if (res.status !== 200) {
+              showTopMessage(res.mess,false,1500);
+              return false;
+            }
+            showTopMessage(res.mess,true,1500);
+            //否则设置cookie跳转到下一步 延时1.5秒
+            setTimeout(function(){
+              $.cookie('install_step3', 'YES', {exdays: 1});
+              window.location.href = window.location.href.replace('step3', 'finsh');
+            }, 1500);
+
+          },
+          error: function (obj, status) {
+            showTopMessage('请检查网络或者稍后重试！',false,1500);
+          }
+        });
+      });
+    });
+  </script>
+</body>
+
+</html>
