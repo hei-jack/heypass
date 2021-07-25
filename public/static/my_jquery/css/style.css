@@ -1,0 +1,680 @@
+body {
+  font-size: 14px;
+}
+
+/*指定盒模型为 IE模型  设置 border、padding 不会影响元素 width 与 height 的尺寸，即 border 与 padding 由元素已设空间转变。*/
+*,
+::after,
+::before {
+  box-sizing: border-box;
+}
+
+/*图标*/
+i.mdi {
+  display: inline-block;
+}
+
+/*卡片*/
+.card {
+  border: 0px;
+  border-radius: 0px;
+  margin-bottom: 24px;
+  -webkit-transition: .5s;
+  transition: .5s;
+  -webkit-box-shadow: 0 2px 3px rgba(0, 0, 0, 0.035);
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.035);
+  position: relative;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  background-color: #fff;
+  background-clip: border-box;
+  border-radius: .25rem;
+}
+
+/*卡片头部*/
+.card-header {
+  padding: .75rem 1.25rem;
+  margin-bottom: 0;
+  background-color: rgba(0, 0, 0, .03);
+  border-bottom: 1px solid rgba(0, 0, 0, .125);
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-pack: justify;
+  justify-content: space-between;
+  -webkit-box-align: center;
+  align-items: center;
+  padding: 15px 24px;
+  background-color: transparent;
+  border-bottom: 1px solid rgba(77, 82, 89, 0.07);
+}
+
+/*卡片标题*/
+.card-title {
+  margin-bottom: .75rem;
+}
+
+.card-header div.card-title {
+  font-size: 16px;
+}
+
+.card-header>*:last-child {
+  margin-right: 0;
+}
+
+.card-header .card-title {
+  margin-bottom: 0;
+}
+
+/*卡片体*/
+.card-body {
+  padding: 24px;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  min-height: 1px;
+  padding: 1.25rem;
+  font-size: 14px;
+}
+
+/*---------------------------------- 真主页 -----------------------------------*/
+/*服务器信息*/
+.server-info p{
+  font-size: 16px;
+  padding: 5px;
+}
+
+/*关于heypass*/
+.about-heypass p {
+  padding: 15px;
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+/*---------------------------------- 表格 -----------------------------------*/
+.table-container {
+  width: 100%;
+}
+
+.table-head {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.table-main {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.table-footer {
+  width: 100%;
+  margin-bottom: 1rem;
+  height: 36px;
+}
+
+/*表格*/
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+tr {
+  border-bottom: 1px rgba(77, 82, 89, 0.07) solid;
+  vertical-align: middle;
+}
+
+th {
+  min-width: 100px;
+  min-height: 50px;
+  font-size: 18px;
+  padding: 10px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+td {
+  min-width: 100px;
+  min-height: 50px;
+  font-size: 16px;
+  padding: 10px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+
+/*带边框的表格*/
+.table-bordered th,
+.table-bordered td {
+  border: 1px rgba(77, 82, 89, 0.07) solid;
+}
+
+/*鼠标移入行会有颜色的反应的表格*/
+.table-hover tbody tr {
+  -webkit-transition: background-color 0.2s linear;
+  transition: background-color 0.2s linear;
+}
+
+.table-hover tbody tr:hover {
+  color: #212529;
+  background-color: rgba(0, 0, 0, .075);
+}
+
+/*类似于斑马纹的隔行换色的表格*/
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: rgba(0, 0, 0, .05);
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: #f9fafb;
+}
+
+.table-hover>tbody>tr:hover {
+  background-color: #f1fbfb;
+}
+
+/*表格ajax加载动画*/
+.table-loading{
+  background-color: rgba(0,0,0,0.035);
+}
+.table-loading td{
+  font-size: 25px;
+  letter-spacing: 10px;
+  /*height: 80px;*/
+  /*line-height: 80px;*/
+  /*暂时采用400px 效果看起来更自然*/
+  height: 400px;
+  line-height: 400px;
+}
+
+/*表单*/
+.form-group {
+    margin-bottom: 1rem;
+    line-height: 1.72;
+}
+
+label {
+    display: inline-block;
+    margin-bottom: .5rem;
+}
+
+button, input, select, textarea {
+    margin: 0;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+}
+button, select {
+    text-transform: none;
+}
+select {
+    word-wrap: normal;
+}
+button, input {
+    overflow: visible;
+}
+button, input, optgroup, select, textarea {
+    margin: 0;
+    outline: none;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+}
+.form-control {
+    display: block;
+    width: 100%;
+    height: calc(1.5em + .75rem + 3px);
+    padding: .375rem .75rem;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #8b95a5;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #F2F3F3;
+    border-color:#F2F3F3 /*rgba(77, 82, 89, 0.07)*/;
+    -webkit-border-radius: 2px;
+    border-radius: 2px;
+    -webkit-transition: 0.2s linear;
+    transition: 0.2s linear;
+}
+
+.form-control:focus {
+    color: #495057;
+    background-color: #fff;
+    border-color: #33cabb;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(51, 202, 187, 0.25);
+}
+
+textarea.form-control {
+    height: auto;
+}
+
+/*滑动按钮 单选*/
+.custom-control {
+    position: relative;
+    display: block;
+    min-height: 1.5rem;
+    padding-left: 1.5rem;
+}
+/*滑动按钮*/
+.custom-switch {
+    padding-left: 2.25rem;
+}
+.custom-control-input {
+    position: absolute;
+    left: 0;
+    z-index: -1;
+    width: 1rem;
+    height: 1.25rem;
+    opacity: 0;
+}
+
+.custom-control-label {
+    position: relative;
+    margin-bottom: 0;
+    vertical-align: top;
+}
+
+.custom-control-label::before {
+    position: absolute;
+    top: .25rem;
+    left: -1.5rem;
+    display: block;
+    width: 1rem;
+    height: 1rem;
+    pointer-events: none;
+    content: "";
+    background-color: #fff;
+    border: #adb5bd solid 1px;
+}
+
+.custom-control-label::before, .custom-file-label, .custom-select {
+    transition: background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+.custom-control-label::before {
+    border-color: #ebebeb;
+}
+.custom-switch .custom-control-label::before {
+    left: -2.25rem;
+    width: 1.75rem;
+    pointer-events: all;
+    border-radius: .5rem;
+}
+.custom-control-input:checked~.custom-control-label::before {
+    color: #fff;
+    border-color: #007bff;
+    background-color: #007bff;
+}
+.custom-control-input:checked~.custom-control-label::before {
+    background-color: #33cabb;
+    border-color: #33cabb;
+}
+.custom-control-label::after {
+    position: absolute;
+    top: .25rem;
+    left: -1.5rem;
+    display: block;
+    width: 1rem;
+    height: 1rem;
+    content: "";
+    background: no-repeat 50%/50% 50%;
+}
+.custom-switch .custom-control-label::after {
+    top: calc(.25rem + 2px);
+    left: calc(-2.25rem + 2px);
+    width: calc(1rem - 4px);
+    height: calc(1rem - 4px);
+    background-color: #adb5bd;
+    border-radius: .5rem;
+    transition: background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out,-webkit-transform .15s ease-in-out;
+    transition: transform .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    transition: transform .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out,-webkit-transform .15s ease-in-out;
+}
+.custom-switch .custom-control-input:checked~.custom-control-label::after {
+    background-color: #fff;
+    -webkit-transform: translateX(.75rem);
+    transform: translateX(.75rem);
+}
+
+/*获得焦点后的外圈阴影和边框颜色*/
+.custom-control-input:focus:not(:checked) ~ .custom-control-label::before {
+    border-color: #33cabb;
+}
+
+.custom-control-input:focus ~ .custom-control-label::before {
+    box-shadow: 0 0 0 0.2rem rgba(51, 202, 187, 0.25);
+}
+
+/*内联*/
+.custom-control-inline {
+  display: inline-block;
+  margin-right: 1rem;
+}
+.custom-control-label::before {
+  position: absolute;
+  top: .25rem;
+  left: -1.5rem;
+  display: block;
+  width: 1rem;
+  height: 1rem;
+  pointer-events: none;
+  content: "";
+  background-color: #fff;
+  border: #adb5bd solid 1px;
+}
+
+
+.custom-control-label::before {
+  border-color: #ebebeb;
+}
+/*单选*/
+.custom-radio .custom-control-label::before {
+  border-radius: 50%;
+}
+
+.custom-pink .custom-control-input:checked ~ .custom-control-label::before {
+  color: #fff;
+  border-color: #f96197;
+  background-color: #f96197;
+}
+
+.custom-pink .custom-control-input:focus ~ .custom-control-label::before {
+  box-shadow: 0 0 0 0.2rem rgba(249, 97, 151, 0.25);
+}
+.custom-radio .custom-control-input:checked~.custom-control-label::after {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e");
+}
+
+/*禁用或只读按钮*/
+.form-control:disabled, .form-control[readonly] {
+    background-color: #e9ecef;
+    opacity: 1;
+}
+
+/*分割线样式*/
+.lyear-divider {
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-box-flex: 0;
+  flex: 0 1;
+  color: #4d5259;
+  font-size: 14px;
+  letter-spacing: .5px;
+  margin: 2rem auto;
+  width: 100%;
+}
+.lyear-divider::before,
+.lyear-divider::after {
+  content: '';
+  -webkit-box-flex: 1;
+  flex-grow: 1;
+  border-top: 1px solid rgba(77, 82, 89, 0.07);
+}
+.lyear-divider::before {
+  margin-right: 15px;
+}
+.lyear-divider::after {
+  margin-left: 15px;
+}
+
+/*按钮组*/
+
+.btn-group, .btn-group-vertical {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 0;
+}
+
+.btn-group i{
+  font-size: 16px;
+  color: #333;
+}
+
+
+/* markdown.css
+ * Modified based on Li Xiaolai's markdownhere.css(https://gist.github.com/xiaolai/aa190255b7dde302d10208ae247fc9f2), respect!
+ * 
+ */
+
+ /*编辑器容器*/
+.editor-wrapper{
+  height: 600px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+#editor{
+  width: 100%;
+  min-height: 560px;
+  resize: none;
+  font-weight:500;
+  /*光标颜色*/
+  caret-color: #FA0560;
+  color: #000;
+  font-size: 18px;
+  border: 0;
+  overflow: hidden;
+}
+
+/*预览容器*/
+.output-wrapper {
+  height: 600px;
+  font-size: 16px;
+  line-height: 1.8em;
+  letter-spacing: 0.1em;
+  background: #FCF6E5;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+
+#output{
+  width: 100%;
+  min-height: 560px;
+  background: #FCF6E5;
+  font-size: 18px;
+}
+
+
+#output pre,
+#output code {
+  font-size: 14px;
+  font-family: Roboto, 'Courier New', Consolas, Inconsolata, Courier, monospace;
+  margin: auto 5px;
+}
+
+#output code {
+  white-space: pre-wrap;
+  border-radius: 2px;
+  display: inline;
+}
+
+#output pre {
+  font-size: 15px;
+  line-height: 1.4em;
+  display: block !important;
+}
+
+#output pre code {
+  white-space: pre;
+  overflow: auto;
+  border-radius: 3px;
+  padding: 10px 10px;
+  display: block !important;
+  background: #292b2c !important;
+}
+
+#output strong,
+#output b {
+  color: #BF360C;
+}
+
+#output em,
+#output i {
+  color: #009688;
+}
+
+#output hr {
+  border: 1px solid #BF360C;
+  margin: 1.5em auto;
+}
+
+#output p {
+  margin: 1.5em 5px !important;
+}
+
+#output table,
+#output pre,
+#output dl,
+#output blockquote,
+#output q,
+#output ul,
+#output ol {
+  margin: 10px 5px;
+}
+
+#output ul,
+#output ol {
+  padding-left: 15px;
+}
+
+#output li {
+  margin: 10px;
+}
+
+#output li p {
+  margin: 10px 0 !important;
+}
+
+#output ul ul,
+#output ul ol,
+#output ol ul,
+#output ol ol {
+  margin: 0;
+  padding-left: 10px;
+}
+
+#output ul {
+  list-style-type: circle;
+}
+
+#output dl {
+  padding: 0;
+}
+
+#output dl dt {
+  font-size: 1em;
+  font-weight: bold;
+  font-style: italic;
+}
+
+#output dl dd {
+  margin: 0 0 10px;
+  padding: 0 10px;
+}
+
+#output blockquote,
+#output q {
+  border-left: 2px solid #009688;
+  padding: 0 10px;
+  color: #777;
+  quotes: none;
+  margin-left: 1em;
+}
+
+#output blockquote::before,
+#output blockquote::after,
+#output q::before,
+#output q::after {
+  content: none;
+}
+
+#output h1,
+#output h2,
+#output h3,
+#output h4,
+#output h5,
+#output h6 {
+  margin: 20px 0 10px;
+  padding: 0;
+  font-style: bold !important;
+  color: #009688 !important;
+  text-align: center !important;
+  margin: 1.5em 5px !important;
+  padding: 0.5em 1em !important;
+}
+
+#output h1 {
+  font-size: 24px !important;
+  border-bottom: 1px solid #ddd !important;
+}
+
+#output h2 {
+  font-size: 20px !important;
+  border-bottom: 1px solid #eee !important;
+}
+
+#output h3 {
+  font-size: 18px;
+}
+
+#output h4 {
+  font-size: 16px;
+}
+
+
+#output table {
+  padding: 0;
+  border-collapse: collapse;
+  border-spacing: 0;
+  font-size: 1em;
+  font: inherit;
+  border: 0;
+  margin: 0 auto;
+}
+
+#output tbody {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+#output table tr {
+  border: 0;
+  border-top: 1px solid #CCC;
+  background-color: white;
+  margin: 0;
+  padding: 0;
+}
+
+#output table tr:nth-child(2n) {
+  background-color: #F8F8F8;
+}
+
+#output table tr th,
+#output table tr td {
+  font-size: 16px;
+  border: 1px solid #CCC;
+  margin: 0;
+  padding: 5px 10px;
+}
+
+#output table tr th {
+  font-weight: bold;
+  color: #eee;
+  border: 1px solid #009688;
+  background-color: #009688;
+}
+
+/* 响应式处理 小于575.98px时 设置output的背景色为透明色 */
+@media (max-width: 575.98px) {
+  #output{
+    background-color: transparent;
+  }
+}
