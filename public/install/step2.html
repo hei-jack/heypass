@@ -1,228 +1,18 @@
 <!DOCTYPE html>
 <html lang="zh">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="renderer" content="webkit" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- 引入ico图标 -->
-    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
-    <title>HeyPass-安装向导</title>
-    <link rel="stylesheet" type="text/css" href="../static/my_jquery/css/materialdesignicons.min.css">
-    <link rel="stylesheet" type="text/css" href="../static/my_jquery/css/base.css">
-    <link rel="stylesheet" type="text/css" href="../static/my_jquery/css/style.css">
-    <style>
-      /* 背景图 */
-      body{
-      background: url('https://w.wallhaven.cc/full/k7/wallhaven-k7xreq.jpg') no-repeat center 0px;
-      background-size: cover;
-      background-position: center 0;
-      background-repeat: no-repeat;
-      background-attachment: fixed;
-      -webkit-background-size: cover;
-      -o-background-size: cover;
-      -moz-background-size: cover;
-      -ms-background-size: cover;
-      }
 
-      /* 水平垂直居中 */
-      .col-center{
-      margin: 0 auto;
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      /* 兼容IE9及以上浏览器 */
-      -webkit-transform: translate(-50%, -50%);
-      -moz-transform: translate(-50%, -50%);
-      -ms-transform: translate(-50%, -50%);
-      -o-transform: translate(-50%, -50%);
-      transform: translate(-50%, -50%);
-      }
-
-      .card-header div.card-title {
-      font-size: 20px;
-      }
-      /* 步骤进度条 */
-      .nav {
-      display: -ms-flexbox;
-      display: flex;
-      -ms-flex-wrap: wrap;
-      flex-wrap: wrap;
-      padding-left: 0;
-      margin-bottom: 1rem;
-      }
-      .nav-step .nav-item {
-      position: relative;
-      float: left;
-      display: -webkit-box;
-      display: flex;
-      -webkit-box-orient: vertical;
-      -webkit-box-direction: normal;
-      flex-direction: column;
-      -webkit-box-flex: 1;
-      -webkit-box-align: center;
-      align-items: center;
-      flex: 1 1;
-      padding: 0 12px;
-      font-size: 0;
-      width: 25%;
-      height: 68px;
-      }
-
-      .nav-item span{
-      width: 100%;
-      display: block;
-      font-size: 14px;
-      }
-
-      .nav-step .nav-link {
-      display: -webkit-inline-box;
-      display: inline-flex;
-      margin: 10px 0;
-      width: 29px;
-      height: 29px;
-      max-height: 29px;
-      border-radius: 50%;
-      color: #33cabb;
-      background-color: #f7fafc;
-      -webkit-transition: .3s linear;
-      transition: .3s linear;
-      z-index: 1;
-      }
-
-      .nav-step .nav-item.complete .nav-link, .nav-step .nav-item.complete .nav-link::before, .nav-step .nav-item
-      .nav-link.active, .nav-step .nav-item .nav-link.active::before {
-      background-color: #dcfcfa;
-      }
-
-
-
-      .nav-step .nav-item.complete .nav-link::after, .nav-step .nav-item .nav-link.active::after {
-      background-color: #33cabb;
-      width: 24px;
-      height: 24px;
-      -webkit-transform: translateX(0);
-      transform: translateX(0);
-      color: #fff;
-      }
-
-      .nav-step .nav-item.complete .nav-link::after {
-      width: 29px;
-      height: 29px;
-      -webkit-transform: translateX(0);
-      transform: translateX(0);
-      color: #fff;
-      }
-
-      .nav-step .nav-item .nav-link.active::after {
-      width: 13px;
-      height: 13px;
-      margin-top: 8px;
-      -webkit-transform: translateX(8px);
-      transform: translateX(8px);
-      color: transparent;
-      }
-
-      .nav-step .nav-link::before {
-      content: '';
-      position: absolute;
-      left: calc(-50% + 14.5px);
-      right: calc(50% + 14.5px); 
-      height: 10px;
-      margin-top: 9.5px;
-      background-color: #eceef0;
-      cursor: default;
-      -webkit-transition: .5s;
-      transition: .5s;
-      }
-
-      .nav-step .nav-link::after {
-      content: "\f12c";
-      font-family: "Material Design Icons";
-      width: 0;
-      height: 0;
-      text-align: center;
-      font-size: 15px;
-      position: absolute;
-      border-radius: 50%;
-      background-color: transparent;
-      color: transparent;
-      -webkit-transform: translate(14.5px, 14.5px);
-      -ms-transform: translate(14.5px, 14.5px);
-      transform: translate(14.5px, 14.5px);
-      -webkit-transition: .5s;
-      transition: .5s;
-      z-index: 1;
-      display: -webkit-inline-box;
-      display: inline-flex;
-      -webkit-box-align: center;
-      align-items: center;
-      -webkit-box-pack: center;
-      justify-content: center;
-      }
-
-      .nav-step .nav-item:first-child a::before {
-      display: none;
-      }
-
-      .support{
-        position: relative;
-        float: right;
-        /* display: inline-block; */
-        /* margin-right: 20px; */
-        vertical-align: text-bottom;
-        width: 20px;
-        height: 20px;
-        background-color: transparent;
-        border-radius: 50%;
-        cursor: default;
-        pointer-events: none;
-      }
-
-      [data-flag='1']{
-        background-color: #00fc71;
-      }
-      
-      [data-flag='0']{
-        background-color: #fa4949;
-      }
-
-      .support::after{
-      content: "";
-      font-family: "Material Design Icons";
-      width: 20px;
-      height: 20px;
-      text-align: center;
-      font-size: 15px;
-      position: absolute;
-      left: 0;
-      border-radius: 50%;
-      background-color: transparent;
-      color: #fff;
-      -webkit-transition: .5s;
-      transition: .5s;
-      z-index: 1;
-      display: -webkit-inline-box;
-      display: inline-flex;
-      -webkit-box-align: center;
-      align-items: center;
-      -webkit-box-pack: center;
-      justify-content: center;
-      }
-
-      [data-flag='1']::after{
-      content: "\f12c";
-      }
-
-      [data-flag='0']::after{
-        content: "\f156";
-      }
-
-      .form-flag{
-        top: -29px;
-        right: 9px;
-      }
-    </style>
-    <!--[if IE 9]>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="renderer" content="webkit" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- 引入ico图标 -->
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+  <title>HeyPass-安装向导</title>
+  <link rel="stylesheet" type="text/css" href="../static/my_jquery/css/materialdesignicons.min.css">
+  <link rel="stylesheet" type="text/css" href="../static/my_jquery/css/base.css">
+  <link rel="stylesheet" type="text/css" href="../static/my_jquery/css/style.css">
+  <link rel="stylesheet" type="text/css" href="./install.css">
+  <!--[if IE 9]>
       <style>
         /* 兼容ie9 */
         .nav-step .nav-link{
@@ -236,151 +26,167 @@
         }
       </style>
        <![endif]-->
-  </head>
-  <body>
-    <!-- 密码列表 -->
-    <div class="container-fluid p-t-15">
+</head>
 
-      <div class="row">
-        <div class="col-lg-4 col-center">
-          <div class="card">
-            <header class="card-header">
-              <div class="card-title">HeyPass-安装向导</div>
-            </header>
-            <div class="card-body">
+<body>
+  <!-- 密码列表 -->
+  <div class="container-fluid p-t-15">
 
-              <!-- 步骤向导 -->
-              <ul class="nav nav-step text-center">
-                <li class="nav-item complete">
-                  <span>环境检测</span>
-                  <a class="nav-link" data-toggle="tab" href="/install/index.html"></a>
-                </li>
+    <div class="row">
+      <div class="col-lg-4 col-center">
+        <div class="card">
+          <header class="card-header">
+            <div class="card-title">HeyPass-安装向导</div>
+          </header>
+          <div class="card-body">
 
-                <li class="nav-item">
-                  <span>后台设置</span>
-                  <a class="nav-link active" data-toggle="tab" href="/install/step2.html"></a>
-                </li>
+            <!-- 步骤向导 -->
+            <ul class="nav nav-step text-center">
+              <li class="nav-item complete">
+                <span>环境检测</span>
+                <a class="nav-link" data-toggle="tab" href="/install/index.html"></a>
+              </li>
 
-                <li class="nav-item">
-                  <span>数据库设置</span>
-                  <a class="nav-link" data-toggle="tab" href="#step-3"></a>
-                </li>
+              <li class="nav-item">
+                <span>后台设置</span>
+                <a class="nav-link active" data-toggle="tab" href="javascript:void(0);"></a>
+              </li>
 
-                <li class="nav-item">
-                  <span>安装完成</span>
-                  <a class="nav-link" data-toggle="tab" href="#step-4"></a>
-                </li>
-              </ul>
+              <li class="nav-item">
+                <span>数据库设置</span>
+                <a class="nav-link" data-toggle="tab" href="/install/step3.html"></a>
+              </li>
 
-              <!-- 步骤内容 -->
-              <div class="form-group">
-                <label for="themes">主题选择</label>
-                  <div class="form-controls">
-                    <select name="themes" class="form-control" id="themes">
-                      <option value="1">测试主题--myjquery</option>
-                      <option value="2">themes1</option>
-                      <option value="3">themes2</option>
-                      <option value="4">themes3</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label for="admin">后台地址</label>
-                  <input type="text" class="form-control" id="admin" name="admin" value="" placeholder="请输入后台地址">
-                  <a class="support form-flag" href="javascript(0);"></a>
-                </div>
-                <div class="form-group text-center">
-                  <button type="button" class="btn btn-danger" id="rand">随机地址</button>
-                </div>
-              
-              <button type="button" class="btn btn-primary" id="pre-btn">上一步</button>
-              <button type="button" class="btn btn-primary float-right" id="next-btn">下一步</button>
+              <li class="nav-item">
+                <span>安装完成</span>
+                <a class="nav-link" data-toggle="tab" href="/install/finsh.html"></a>
+              </li>
+            </ul>
+
+            <!-- 步骤内容 -->
+            <div class="form-group">
+              <label for="themes">主题选择</label>
+              <div class="form-controls">
+                <select name="themes" class="form-control" id="themes">
+                  <!-- my_jquery主题 -->
+                  <option value="1" selected="selected">默认主题</option>
+                  <option value="-1">暂未开放其他主题</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="admin">后台地址</label>
+              <input type="text" class="form-control" id="admin" name="admin" value="" placeholder="请输入后台地址">
+              <a class="support form-flag" href="javascript(0);"></a>
+            </div>
+            <div class="form-group text-center">
+              <button type="button" class="btn btn-danger" id="rand">随机地址</button>
             </div>
 
-            </div>
+            <button type="button" class="btn btn-primary" id="pre-btn">上一步</button>
+            <button type="button" class="btn btn-primary float-right" id="next-btn">下一步</button>
           </div>
+
         </div>
       </div>
     </div>
-    <script src="../static/my_jquery/js/my.jquery.js"></script>
-    <script src="../static/my_jquery/js/my.table.js"></script>
-    <script type="text/javascript">
-      $.ready(function () {
-        //$.removeCookie('setp1');
-        //如果没有step1完成cookie 跳转回前面的step1
-        if(!$.cookie('setp1')) window.location.href = window.location.href.replace('step2','index');
+  </div>
+  </div>
+  <script src="../static/my_jquery/js/my.jquery.js"></script>
+  <script src="../static/my_jquery/js/common.js"></script>
+  <script type="text/javascript">
+    $.ready(function () {
 
-        //当随机地址发生点击事件时
-        $('#rand').on('click',function(){
-          //随机生成6-10位地址
-          var len = Math.floor(Math.random() * 5) + 6;
-          var str = 'abcdefghijklmnopqrstuvwxyz123456789_-';
-          var pwd = '';
-          var j = 0;
-          for (var i = 0; i < len; i++) {
-                j = Math.floor(Math.random() * str.length); //随机取出一个字符
-                pwd += str.charAt(j);
+      //如果没有step1完成cookie 跳转回前面的step1
+      if (!$.cookie('install_step1')) window.location.href = window.location.href.replace('step2', 'index');
+
+      //标记位
+      var flag = false;
+
+      //当随机地址发生点击事件时
+      $('#rand').on('click', function () {
+        //随机生成6-10位地址
+        var len = Math.floor(Math.random() * 5) + 6;
+        var str = 'abcdefghijklmnopqrstuvwxyz123456789_-';
+        var pwd = '';
+        var j = 0;
+        for (var i = 0; i < len; i++) {
+          j = Math.floor(Math.random() * str.length); //随机取出一个字符
+          pwd += str.charAt(j);
+        }
+        $('#admin').value = pwd;
+        $('.form-flag').setAttribute('data-flag', 1);
+      });
+
+      $('#admin').on('keyup', function () {
+        //当后台地址输入框发生按键弹起事件时
+        var str = this.value;
+        if (str.length < 6 || str.length > 10) {
+          $('.form-flag').setAttribute('data-flag', 0);
+          return false;
+        }
+        //正则表达式
+        var reg = /[^a-z0-9_-]+/g;
+        var flag = reg.test(str) ? 0 : 1;
+        $('.form-flag').setAttribute('data-flag', flag);
+
+      });
+
+      //返回上一页
+      $('#pre-btn').on('click', function () {
+        window.history.back(-1);
+      });
+
+      //当下一步发生点击时
+      $('#next-btn').on('click', function () {
+        //简单校验数据
+        var index = $('#themes').selectedIndex; //获取选中的索引
+        var themes = $('#themes').options[index].value;
+        //console.log($('#themes').options[index].value); //获取选中项的值
+        if(themes === '-1'){
+          showTopMessage('请选择默认主题！',false,1500);
+          return;
+        }
+        //获取输入框的值
+        var admin = $('#admin').value;
+        if(admin.length === 0 || $('#admin').getAttribute('data-flag') === '0'){
+          showTopMessage('请自定义合法的后台地址！',false,1500);
+          return;
+        }
+        //标记位
+        flag = true;
+
+        //发生ajax请求
+        $.ajax({
+          url: './controller.php?a=step2',
+          type: 'post',
+          dataType: 'json',
+          data: {
+            'themes': themes,
+            'admin': admin
+          },
+          success: function (res, code, xmlhttp) {
+            flag = false;
+            //如果返回的不是合法数据 就弹窗警告
+            if (res.status !== 200) {
+              showTopMessage(res.mess,false,1500);
+              return false;
             }
-          $('#admin').value = pwd;
-          $('.form-flag').setAttribute('data-flag',1);
-        });
-
-        $('#admin').on('keyup',function(){
-          //当后台地址输入框发生按键弹起事件时
-          var str = this.value;
-          if(str.length < 6 || str.length > 10){
-            $('.form-flag').setAttribute('data-flag',0);
-            return false;
+            //否则设置cookie跳转到下一步
+            $.cookie('install_step2', 'YES', {exdays: 1});
+            showTopMessage('设置成功！正在跳转中，请稍候',true,1500);
+            //1.5秒后跳转写一步
+            var timer = setTimeout(function(){
+              window.location.href = window.location.href.replace('step2', 'step3');
+            }, 1500);
+          },
+          error: function (obj, status) {
+            showTopMessage('请检查网络状态或稍后再试',false,1500);
           }
-          //正则表达式
-          var reg = /[^a-z0-9_-]+/g;
-          var flag = reg.test(str) ? 0:1;
-          $('.form-flag').setAttribute('data-flag',flag);
-          
-        });
-        
-        //返回上一页
-        $('#pre-btn').on('click',function(){
-          window.history.back(-1);
-        });
-
-        //当下一步发生点击时
-        $('#next-btn').on('click',function(){
-          //简单校验数据
-          var index = $('#themes').selectedIndex; //获取选中的索引
-          var themes = $('#themes').options[index].value;
-          //console.log($('#themes').options[index].value); //获取选中项的值
-          //获取输入框的值
-          var admin = $('#admin').value;
-
-          //发生ajax请求
-          $.ajax({
-            url: './controller.php?a=step2',
-            type: 'post',
-            dataType: 'json',
-            data: {
-              'themes': themes,
-              'admin': admin
-            },
-            success: function (res, code, xmlhttp) {
-              //如果返回的不是合法数据 就弹窗警告
-              if (res.status !== 200) {
-                alert(res.mess);
-                return false;
-              }
-              //否则设置cookie跳转到下一步
-              $.cookie('setp2','YES',{exdays:1});
-              window.location.href = window.location.href.replace('setp2','setp3');
-            },
-            error: function (obj, status) {
-              alert('请检查网络或者稍后重试！');
-            }
         });
       });
-            //环境满足条件 则设置cookie 并跳转页面
-            //$.cookie('setp1','YES',{exdays:1});
-            //window.location.href = window.location.protocol + '/install/setp2.html';
-        });
-    </script>
-  </body>
+    });
+  </script>
+</body>
+
 </html>

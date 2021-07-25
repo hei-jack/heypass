@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="zh-cn">
+<html lang="zh">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="renderer" content="webkit" />
@@ -51,42 +52,27 @@
                 <a class="nav-link" data-toggle="tab" href="/install/step2.html"></a>
               </li>
 
-              <li class="nav-item">
+              <li class="nav-item complete">
                 <span>数据库设置</span>
-                <a class="nav-link active" data-toggle="tab" href="javascript:void(0);"></a>
+                <a class="nav-link" data-toggle="tab" href="/install/step3.html"></a>
               </li>
 
               <li class="nav-item">
                 <span>安装完成</span>
-                <a class="nav-link" data-toggle="tab" href="/install/finsh.html"></a>
+                <a class="nav-link active" data-toggle="tab" href="javascript:void(0);"></a>
               </li>
             </ul>
 
             <!-- 步骤内容 -->
             <div class="form-group">
-              <label for="host">数据库地址</label>
-              <input type="text" class="form-control" id="host" name="host" value="localhost" placeholder="请输入数据库地址">
-            </div>
-            <div class="form-group">
-              <label for="base">数据库名</label>
-              <input type="text" class="form-control" id="base" name="base" value="" placeholder="请输入数据库名">
-            </div>
-            <div class="form-group">
-              <label for="user">数据库用户名</label>
-              <input type="text" class="form-control" id="user" name="user" value="" placeholder="请输入数据库用户名">
-            </div>
-            <div class="form-group">
-              <label for="pass">数据库密码</label>
-              <input type="text" class="form-control" id="pass" name="pass" value="" placeholder="请输入数据库密码">
-            </div>
-            <div class="form-group">
-              <label for="prefix">表前缀</label>
-              <input type="text" class="form-control" id="prefix" name="prefix" value="y_" placeholder="请输入表前缀，默认为y_">
-              <small class="help-block code">点击下一步之后请耐心等候，这一步可能需要耗费比较长的时间。</small>
+              <span class="help-block code">HeyPass已经安装完成，请妥善保管以下信息，并且点击完成后登录后台修改默认密码。请注意，无论是你是否点击完成按钮，请务必前往手动删除public/install文件夹。</span>
+              <p>后台地址：<a class="help-block code" id="admin" href="{$admin}">{$admin}点击这里跳转后台</a></p>
+              <p>默认账号：<span class="help-block code">admin</span></p>
+              <p>默认密码：<span class="help-block code">admin12345</span></p>
             </div>
 
             <button type="button" class="btn btn-primary" id="pre-btn">上一步</button>
-            <button type="button" class="btn btn-primary float-right" id="next-btn">下一步</button>
+            <button type="button" class="btn btn-danger float-right" id="next-btn">完成</button>
           </div>
 
         </div>
@@ -99,10 +85,7 @@
   <script type="text/javascript">
     $.ready(function () {
       //如果没有step2完成cookie 跳转回前面的step2
-      if (!$.cookie('install_step2')) window.location.href = window.location.href.replace('step3', 'step2');
-
-      //标记位
-      var flag = false;
+      if (!$.cookie('install_step3')) window.location.href = window.location.href.replace('finsh', 'step3');
 
       //返回上一页
       $('#pre-btn').on('click', function () {
@@ -111,68 +94,26 @@
 
       //当下一步发生点击时
       $('#next-btn').on('click', function () {
-        //防止重复点击
-        if(flag) return;
-
-        //简单校验数据
-        var host = $('#host').value;
-        if(host.length === 0){
-          showTopMessage('请输入数据库地址！',false,1500);
-          return;
-        }
-        var base = $('#base').value;
-        if(base.length === 0){
-          showTopMessage('请输入数据库名！',false,1500);
-          return;
-        }
-
-        var user = $('#user').value;
-        if(user.length === 0){
-          showTopMessage('请输入数据库用户！',false,1500);
-          return;
-        }
-
-        var pass = $('#pass').value;
-        if(pass.length === 0){
-          showTopMessage('请输入数据库密码!',false,1500);
-          return;
-        }
-
-        var prefix = $('#prefix').value;
-        if(prefix.length < 2 || prefix.match(/^[a-z]+[_]{1}$/g) === null){
-          showTopMessage('请输入合法表前缀!',false,1500);
-          return;
-        }
-
-        //标记位
-        flag = true;
 
         //发生ajax请求
         $.ajax({
-          url: './controller.php?a=step3',
+          url: './controller.php?a=finsh',
           type: 'post',
           dataType: 'json',
           data: {
-            'host': host,
-            'dbname': base,
-            'user': user,
-            'pass': pass,
-            'prefix': prefix,
+            'finsh': 'finsh'
           },
           success: function (res, code, xmlhttp) {
-            flag = false;
             //如果返回的不是合法数据 就弹窗警告
             if (res.status !== 200) {
               showTopMessage(res.mess,false,1500);
               return false;
             }
             showTopMessage(res.mess,true,1500);
-            //否则设置cookie跳转到下一步 延时1.5秒
             setTimeout(function(){
-              $.cookie('install_step3', 'YES', {exdays: 1});
-              window.location.href = window.location.href.replace('step3', 'finsh');
+              //跳转到后台地址
+            window.location.href = window.location.href.replace('/install/finsh.html', $('#admin').getAttribute('href'));
             }, 1500);
-
           },
           error: function (obj, status) {
             showTopMessage('请检查网络或者稍后重试！',false,1500);
