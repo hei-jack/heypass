@@ -63,7 +63,7 @@ class User extends Model{
   public function getState(){
     $res = $this->field('u_state')->where('id',session('uid','','admin'))->find();
     if($res === null) return false; //如果查询为空 直接返回false
-    return $res->getAttr('u_state') === 1;
+    return intval($res->getAttr('u_state')) === 1;
   }
 
   //检查cookie的sign

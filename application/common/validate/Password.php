@@ -19,7 +19,7 @@ class Password extends Validate
         'p_pass' => ['require','max' => 50], //密码
         'p_title' => ['require','max' => 20,'chsDash'], //中文名称 只能是汉字、字母和数字，下划线_及破折号-
         'p_url' => ['max' => 50,'url', 'regex' => '/^[a-zA-Z0-9_\?\.\/:=-]+$/'], //只能是url 但是filter_var感觉不太靠谱 增加正则 只允许字母数字_?.-=通过
-        'p_other' => ['max' => 50,'regex' => '/^[\x{4e00}-\x{9fa5}a-zA-Z0-9,\/\._:，。\?？-]+/u'], //不能超过50个字
+        'p_other' => ['max' => 255], //不能超过255个字
         '__token__' => ['require','max' => 33,'token'],
     ];
     
@@ -46,7 +46,6 @@ class Password extends Validate
         'p_url.url' => '关联网址格式有误！',
         'p_url.regex' => '关联网址格式有误！',
         'p_other.max' => '备注长度有误',
-        'p_other.regex' => '备注格式有误！',
         '__token__.max' => '非法请求！',
         '__token__.require' => '非法请求！',
         '__token__.token' => '页面过期，请刷新重试！',

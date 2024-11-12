@@ -72,7 +72,7 @@
             <div class="form-group col-md-12">
               <label for="other">备注</label>
               <textarea class="form-control" id="other" rows="3" name="other" placeholder="请输入备注"></textarea>
-              <small class="help-block">可选。允许汉字、大小写字母、数字，特殊符号,/._:，。-?？等，不能超过50个字符</small>
+              <small class="help-block">可选。不能超过255个字符</small>
             </div>
 
             <div class="form-group col-md-12">
@@ -177,14 +177,7 @@
         //备注
         var other = $('#other').value;
         len = other.length;
-        if(len !== 0){
-          reg = /^[\u4e00-\u9fa5a-zA-Z0-9,\/\._:，。\?？-]+/g;
-          if (!reg.test(other)) {
-            showTopMessage('新增失败,备注格式有误！', false, 1500);
-            return;
-          }
-        }
-        if(len > 50){
+        if(len > 255){
           showTopMessage('新增失败,备注长度有误！', false, 1500);
           return;
         }

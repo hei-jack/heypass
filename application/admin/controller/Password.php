@@ -22,6 +22,7 @@ class Password extends AdminBase{
 				'limit' => input('post.limit'),
 				'page' => input('post.page'),
 				'id' => input('post.cid'),
+        'title' => input('post.title')
 			];
 			if (strtolower($data['host']) !== $host) return json($this->res);
 			$result = $this->validate($data, '\app\common\validate\Paging.ilpt');
@@ -39,7 +40,8 @@ class Password extends AdminBase{
 			}
 			$model = new PwdModel();
 			$uid = session('uid', '', 'admin');
-			$this->res['total'] = $model->getsubTotal($uid, $data['id']);
+      // 获取总数
+			$this->res['total'] = $model->getSubTotal($uid, $data['id'],$data['title']);
 			if ($this->res['total'] === 0) {
 				$this->res['status'] = 200;
 				$this->res['mess'] = '获取失败,当前分类下数据为空~';
@@ -50,7 +52,7 @@ class Password extends AdminBase{
 				$this->res['mess'] = '请求页码超出范围~';
 				return json($this->res);
 			}
-			$this->res['data'] = $model->getPwdList($uid, $data['id'], $data['page'], $data['limit']);
+			$this->res['data'] = $model->getPwdList($uid, $data['id'], $data['page'], $data['limit'],$data['title']);
 			$this->res['status'] = 200;
 			$this->res['mess'] = '获取成功';
 			return json($this->res);
