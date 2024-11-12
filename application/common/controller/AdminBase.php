@@ -130,7 +130,7 @@ class AdminBase extends Base{
 
   // 检查是否是超级管理员
   final protected function isAdmin(){
-    if(session('uid', '', 'admin') === 1) return true;
+    if(intval(session('uid', '', 'admin')) === 1) return true;
     return false;
   }
 
