@@ -41,8 +41,14 @@ class Index extends AdminBase{
 			$sys_info['software'] = $_SERVER['SERVER_SOFTWARE'];
 			//php版本
 			$sys_info['php_version'] = PHP_VERSION;
+
+      $sqlite = '';
+      if(config('database.type') === "sqlite"){
+        $sqlite = 'sqlite_';
+      }
 			//查询
-			$mysql_info = Db::query("select version() as version");
+			$mysql_info = Db::query("SELECT {$sqlite}version() as version");
+
 			//mysql版本
 			$sys_info['mysql_verison'] = $mysql_info[0]['version'];
 			//服务器ip
