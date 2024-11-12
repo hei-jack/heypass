@@ -28,8 +28,18 @@
           </header>
           <div class="card-body">
 
+
+            <div class="form-group" style="width: 100%;">
+              <input type="text" class="form-control" id="search-input" name="search" placeholder="请输入标题搜索"
+                style="display: inline;width: 60%;" />
+              <button id="search" type="button" class="btn btn-primary m-r-5">
+                <span class="mdi mdi-magnify" aria-hidden="true"></span>搜索
+              </button>
+            </div>
+
             <!-- 分类选择 -->
             <div class="form-group user-select">
+
               <div class="custom-control custom-radio custom-pink custom-control-inline">
                 <input type="radio" id="cat0" name="cat" class="custom-control-input" value="0" checked="checked" />
                 <label class="custom-control-label" for="cat0">所有</label>
@@ -77,8 +87,12 @@
   <script src="__JS__/jsencrypt/jsencrypt.min.js"></script>
   <script src="__JS__/crypto-js/aes.js"></script>
   <script src="__JS__/common.js"></script>
+  <script src="__JS__/confirm.js"></script>
   <script type="text/javascript">
     $.ready(function () {
+
+      // 记录上次搜索词
+      var pre_search = '';
 
       //初始化表格
       var pass_table = $.table({
@@ -96,7 +110,9 @@
             limit: params.limit, // 每页数据量
             page: params.page, //页码
             cid: getVal(), //获取分类
+            title: getSearchVal()
           };
+          pre_search = temp.title;
           return temp;
         },
         ajaxOptions: ajaxOptions,
@@ -105,7 +121,7 @@
           field: 'id',
           title: 'ID',
           align: 'center', //居中
-          formatter: function(value,row,index){
+          formatter: function (value, row, index) {
             //强迫症重排id
             //先获取当前页码
             var now_page = Number($('.pagination .active .page-link').getAttribute('data-page'));
@@ -120,23 +136,23 @@
           field: 'title',
           title: '关联名称',
           align: 'center', //居中
-          formatter: function(value, row, index){
-            //直接解密
-            return dataHelperAES(value);
-          },
+          // formatter: function(value, row, index){
+          //   //直接解密
+          //   return dataHelperAES(value);
+          // },
         }, {
           field: 'name',
           title: '账号',
           align: 'center', //居中
           formatter: function (value, row, index) {
-            return value.substr(0,1) + '******' + value.substr(-3,1);
+            return value.substr(0, 1) + '******' + value.substr(-3, 1);
           },
         }, {
           field: 'pass',
           title: '密码',
           align: 'center', //居中
           formatter: function (value, row, index) {
-            return value.substr(0,1) + '******' + value.substr(-3,1);
+            return value.substr(0, 1) + '******' + value.substr(-3, 1);
           },
         }, {
           field: 'cid',
@@ -151,16 +167,16 @@
           title: '关联网址',
           align: 'center', //居中
           formatter: function (value, row, index) {
-            if(value.length === 0) return value;
-            return value.substr(0,1) + '******' + value.substr(-3,1);
+            if (value.length === 0) return value;
+            return value.substr(0, 1) + '******' + value.substr(-3, 1);
           },
-        },{
+        }, {
           field: 'other',
           title: '备注',
           align: 'center', //居中
           formatter: function (value, row, index) {
-            if(value.length === 0) return value;
-            return value.substr(0,1) + '******' + value.substr(-3,1);
+            if (value.length === 0) return value;
+            return value.substr(0, 1) + '******' + value.substr(-3, 1);
           },
         }, {
           field: 'update_time',
@@ -197,8 +213,8 @@
               //for循环遍历返回当前的index
               var len = data.length;
               var index;
-              for(var i = 0;i < len;i++){
-                if(data[i].id === row.id){
+              for (var i = 0; i < len; i++) {
+                if (data[i].id === row.id) {
                   index = i;
                   break;
                 }
@@ -210,25 +226,25 @@
               var tds = tr.getElementsByTagName('td');
               var spans = btn.getElementsByTagName('span');
               len = tds.length;
-              if(flag){
+              if (flag) {
                 //密文转明文
                 tds[2].innerHTML = dataHelperAES(row.name);
                 tds[3].innerHTML = dataHelperAES(row.pass);
-                if(row.url.length !== 0) tds[5].innerText = dataHelperAES(row.url);
-                if(row.other.length !== 0) tds[6].innerText = dataHelperAES(row.other);
+                if (row.url.length !== 0) tds[5].innerText = dataHelperAES(row.url);
+                if (row.other.length !== 0) tds[6].innerText = dataHelperAES(row.other);
                 //更改图标和提示
-                spans[0].setAttribute('class','mdi mdi-eye-off');
+                spans[0].setAttribute('class', 'mdi mdi-eye-off');
                 spans[1].innerText = '隐藏';
-                btn.setAttribute('data-flag','1');
-              }else{
-                tds[2].innerText = row.name.substr(0,1) + '******' + row.name.substr(-3,1);
-                tds[3].innerText = row.pass.substr(0,1) + '******' + row.pass.substr(-3,1);
-                if(row.url.length !== 0) tds[5].innerText = row.url.substr(0,1) + '******' + row.url.substr(-3,1);
-                if(row.other.length !== 0) tds[6].innerText = row.other.substr(0,1) + '******' + row.other.substr(-3,1);
+                btn.setAttribute('data-flag', '1');
+              } else {
+                tds[2].innerText = row.name.substr(0, 1) + '******' + row.name.substr(-3, 1);
+                tds[3].innerText = row.pass.substr(0, 1) + '******' + row.pass.substr(-3, 1);
+                if (row.url.length !== 0) tds[5].innerText = row.url.substr(0, 1) + '******' + row.url.substr(-3, 1);
+                if (row.other.length !== 0) tds[6].innerText = row.other.substr(0, 1) + '******' + row.other.substr(-3, 1);
                 //更改图标和提示
-                spans[0].setAttribute('class','mdi mdi-eye');
+                spans[0].setAttribute('class', 'mdi mdi-eye');
                 spans[1].innerText = '显示';
-                btn.setAttribute('data-flag','0');
+                btn.setAttribute('data-flag', '0');
               }
             },
             //编辑按钮
@@ -240,46 +256,67 @@
             'click .del_btn': function (event, value, row, table) {
               //ajax请求删除用户 成功则刷新表格 失败告知用户
               //提示用户
-              var good = confirm("您正在进行删除密码操作，请问是否要继续？");
-              if (good !== true) return false;
+              var good = window.parent.confirm("您正在进行删除密码操作，请问是否要继续？");
+              let confirm = new ConfirmClass();
 
-              $.cookie('heypass_token', dataHelper('HeyPass' + Math.random()));
+              // 这里可以自定义
+              confirm.show({
+                title: '确认删除',
+                content: '您正在进行删除密码操作，请问是否要继续？',
+                btns: [{
+                  callback: function (instance) {
+                    // 关闭
+                    instance.close = true;
+                    
+                    $.cookie('heypass_token', dataHelper('HeyPass' + Math.random()));
 
-              //ajax发送请求
-              $.ajax({
-                url: '{:url("admin/Password/del")}',
-                type: 'post',
-                dataType: 'json',
-                data: {
-                  'id': dataHelper(String(row.id)),
-                },
-                headers: {
-                  'Access-token': dataHelper($('[name="token"]').value),
-                  'Access-token2': dataHelper(window.location.host),
-                },
-                success: function (res, code, xmlhttp) {
-                  //刷新token
-                  refreshToken();
-                  if (res.status === 200) {
-                    refreshToken();
-                    showTopMessage('删除成功，正在刷新表格，请稍候~', true, 1500);
-                    //1.5秒后开始进行刷新操作
-                    setTimeout(function () {
-                      table.refresh(); //刷新表格
-                    }, 1500);
-                    return;
+                    //ajax发送请求
+                    $.ajax({
+                      url: '{:url("admin/Password/del")}',
+                      type: 'post',
+                      dataType: 'json',
+                      data: {
+                        'id': dataHelper(String(row.id)),
+                      },
+                      headers: {
+                        'Access-token': dataHelper($('[name="token"]').value),
+                        'Access-token2': dataHelper(window.location.host),
+                      },
+                      success: function (res, code, xmlhttp) {
+                        //刷新token
+                        refreshToken();
+                        if (res.status === 200) {
+                          refreshToken();
+                          showTopMessage('删除成功，正在刷新表格，请稍候~', true, 1500);
+                          //1.5秒后开始进行刷新操作
+                          setTimeout(function () {
+                            table.refresh(); //刷新表格
+                          }, 1500);
+                          return;
+                        }
+                        showTopMessage(res.mess + ',' + res.data, false, 1500);
+                      },
+                      error: function (obj, status) {
+                        refreshToken();
+                        showTopMessage('请检查网络情况或稍后再试', false, 1500);
+                      }
+                    });
+
                   }
-                  showTopMessage(res.mess + ',' + res.data, false, 1500);
-                },
-                error: function (obj, status) {
-                  refreshToken();
-                  showTopMessage('请检查网络情况或稍后再试', false, 1500);
-                }
+                }, {
+                  text: '取消',
+                  callback: function () {
+                    console.log('用户取消删除');
+                  }
+                }]
               });
+              // if (good !== true) return false;
+
+
             }
           }
         }],
-        onLoadSuccess: function (data,xmlhttp) {
+        onLoadSuccess: function (data, xmlhttp) {
           //刷新token
           refreshToken();
           //获取返回的请求头信息
@@ -303,8 +340,22 @@
 
       //当刷新表格按钮发生点击事件时
       $('#refresh').on('click', function () {
-        //刷新表格
-        pass_table.refresh();
+        // 搜索词不一样
+        if (pre_search != getSearchVal()) {
+          //重启刷新表格
+          pass_table.restart();
+        } else {
+          //刷新表格
+          pass_table.refresh();
+        }
+      });
+
+      // 当搜索按钮发生点击时
+      $('#search').on('click', function () {
+        if ($('#search-input').value.length > 0) {
+          //刷新表格
+          pass_table.restart();
+        }
       });
 
       //my-table请求头
@@ -329,6 +380,11 @@
             return val;
           }
         }
+      }
+
+      // 获取搜索框中的值
+      function getSearchVal() {
+        return $('#search-input').value.trim();
       }
 
       //绑定onchange事件 在单选框值改变时刷新表格

@@ -571,12 +571,12 @@ $.table = function(options){
     },
     //刷新表格
     refresh:function(){
-            //先移除原有数据
-            this.removeData();
-            //开启加载动画
-            this.loading();
-            //重新获取本页数据
-            this.getData(this.now_page); 
+        //先移除原有数据
+        this.removeData();
+        //开启加载动画
+        this.loading();
+        //重新获取本页数据
+        this.getData(this.now_page); 
     },
     //重启表格（从第一页开始请求）
     restart:function(){

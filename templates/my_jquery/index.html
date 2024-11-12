@@ -53,7 +53,7 @@
             </li>
 
             {//超级管理员才显示的页面}
-            {if session('uid','','admin') === 1}
+            {if intval(session('uid','','admin')) === 1}
             <li class="nav-item">
               <a class="heypass-tabs" href="{:url('admin/Category/index')}">
                 <i class="mdi mdi-equalizer"></i>
